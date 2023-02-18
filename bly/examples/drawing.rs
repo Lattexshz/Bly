@@ -4,15 +4,15 @@
 extern crate log;
 extern crate env_logger as logger;
 
-use std::env;
+use bly::{fill, Color};
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use std::env;
+use winit::platform::windows::WindowExtWindows;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::WindowBuilder,
 };
-use winit::platform::windows::WindowExtWindows;
-use bly::{Color, fill};
 
 fn main() {
     env::set_var("RUST_LOG", "info");
@@ -22,7 +22,7 @@ fn main() {
 
     let window = WindowBuilder::new()
         .with_title("A fantastic window!")
-        .with_inner_size(winit::dpi::LogicalSize::new(128.0, 128.0))
+        .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
         .build(&event_loop)
         .unwrap();
 
@@ -37,12 +37,10 @@ fn main() {
             } if window_id == window.id() => control_flow.set_exit(),
             Event::MainEventsCleared => {
                 window.request_redraw();
-                bly.clear(Color::Blue);
-            },
-            Event::LoopDestroyed => unsafe {
+                bly.clear(Color::White);
             }
+            Event::LoopDestroyed => unsafe {},
             _ => (),
         }
     });
-
 }

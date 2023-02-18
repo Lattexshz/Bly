@@ -50,47 +50,23 @@ pub mod primitive;
 #[macro_use]
 extern crate log;
 
-use crate::platform_impl::{_fill, get_color};
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use bly_ac::Backend;
 
-pub struct Bly {
-    pub(crate) backend: Backend
+pub struct Bly
+{
+    pub(crate) backend: Box<dyn Backend>,
 }
 
-impl Bly {
-    pub fn clear(&self,color: Color) {
-        self.backend.clear(color_to_vec(color));
-    }
-}
-
-pub struct Backend {
-    #[cfg(target_os="windows")]
-    backend: bly_dx2d::Direct2DBackend
-}
-
-impl Backend {
-    #[cfg(target_os="windows")]
-    pub(crate) fn new(handle: &impl HasRawWindowHandle) -> Self {
-        match handle.raw_window_handle() {
-            RawWindowHandle::Win32(handle) => {
-                let backend = bly_dx2d::create_backend(handle.hwnd as isize).unwrap();
-                return Self {
-                    backend
-                };
-            }
-            _ => {
-                panic!("Unsupported platform");
-            }
-        }
-    }
-
-    pub fn clear(&self,color:Vec4) {
+impl Bly
+{
+    pub fn clear(&self, color: Color) {
         unsafe {
-            self.backend.clear(color.0 as f32, color.1 as f32, color.2 as f32, color.3 as f32).unwrap();
+            let vec = color_to_vec(color);
+            self.backend.clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
 }
-
 /// Mainly used to store vertex information
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Vec4(pub f64, pub f64, pub f64, pub f64);
@@ -110,9 +86,31 @@ pub enum Color {
 }
 
 /// Initialize bly
-pub fn init(handle: &impl HasRawWindowHandle) -> Bly {
+pub fn init(handle: &impl HasRawWindowHandle) -> Bly
+{
+    let backend = match handle.raw_window_handle() {
+        RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
+        RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Xlib(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Xcb(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Wayland(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Drm(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Gbm(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Win32(handle) => {
+            #[cfg(target_os="windows")]
+            {
+                bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
+            }
+        }
+        RawWindowHandle::WinRt(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Web(_) => panic!("This platform is not supported"),
+        RawWindowHandle::AndroidNdk(_) => panic!("This platform is not supported"),
+        RawWindowHandle::Haiku(_) => panic!("This platform is not supported"),
+        _ => panic!("This platform is not supported"),
+    };
     Bly {
-        backend: Backend::new(handle)
+        backend:Box::new(backend),
     }
 }
 
@@ -123,13 +121,13 @@ pub fn fill(color: Color) -> Result<(), ()> {
 
 fn color_to_vec(color: Color) -> Vec4 {
     match color {
-        Color::White => Vec4(255.0,255.0,255.0,0.0),
-        Color::WhiteGray => Vec4(240.0,240.0,240.0,0.0),
-        Color::Gray => Vec4(128.0,128.0,128.0,128.0),
-        Color::Black => Vec4(0.0,0.0,0.0,255.0),
-        Color::Red => Vec4(255.0,0.0,0.0,255.0),
-        Color::Green => Vec4(0.0,255.0,0.0,255.0),
-        Color::Blue => Vec4(0.0,0.0,255.0,255.0),
-        Color::Rgba(r,g,b,a) => Vec4(r as f64, g as f64, b as f64, a as f64)
+        Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
+        Color::WhiteGray => Vec4(240.0, 240.0, 240.0, 0.0),
+        Color::Gray => Vec4(128.0, 128.0, 128.0, 128.0),
+        Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
+        Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),
+        Color::Green => Vec4(0.0, 255.0, 0.0, 255.0),
+        Color::Blue => Vec4(0.0, 0.0, 255.0, 255.0),
+        Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
     }
 }

@@ -1,10 +1,10 @@
+use bly_ac::Backend;
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
-    Win32::Graphics::Direct2D::*, Win32::Graphics::Gdi::*, Win32::System::Com::*,
-    Win32::System::LibraryLoader::*, Win32::UI::WindowsAndMessaging::*,
+    Win32::Graphics::Direct2D::*, Win32::UI::WindowsAndMessaging::*,
 };
 
-pub fn create_backend(hwnd:isize) -> std::result::Result<Direct2DBackend,()> {
+pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
     let mut backend = Direct2DBackend::new(HWND(hwnd)).unwrap();
     match backend.render() {
         Ok(_) => {}
@@ -22,6 +22,18 @@ pub struct Direct2DBackend {
     target: Option<ID2D1HwndRenderTarget>,
     brush1: Option<ID2D1SolidColorBrush>,
     brush2: Option<ID2D1SolidColorBrush>,
+}
+
+impl Backend for Direct2DBackend {
+    unsafe fn clear(&self, r: f32, g: f32, b: f32, a: f32) {
+        let target = self.target.as_ref().unwrap();
+        target.BeginDraw();
+        target.Clear(&D2D1_COLOR_F { r, g, b, a });
+
+        target
+            .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
+            .unwrap();
+    }
 }
 
 impl Direct2DBackend {
@@ -99,19 +111,6 @@ impl Direct2DBackend {
         Ok(())
     }
 
-    pub unsafe fn clear(&self, r:f32,g:f32,b:f32,a:f32) -> Result<()> {
-        let target = self.target.as_ref().unwrap();
-        target.BeginDraw();
-        target.Clear(&D2D1_COLOR_F {
-            r,
-            g,
-            b,
-            a
-        });
-        target.EndDraw(std::ptr::null_mut(), std::ptr::null_mut())?;
-        Ok(())
-    }
-
     pub unsafe fn destroy(&mut self) {
         self.render().unwrap();
     }
@@ -133,7 +132,7 @@ fn create_factory() -> Result<ID2D1Factory1> {
             &options,
             std::mem::transmute(&mut result),
         )
-            .map(|()| result.unwrap())
+        .map(|()| result.unwrap())
     }
 }
 

@@ -1,5 +1,5 @@
-use raw_window_handle::RawWindowHandle;
 use crate::{Color, Vec4};
+use raw_window_handle::RawWindowHandle;
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Rectangle {
     pub(crate) vertex: Vec4,
@@ -12,8 +12,6 @@ impl Rectangle {
     }
 }
 
-
-pub fn draw_rect(rect:Rectangle) -> Result<(),()> {
-
+pub fn draw_rect(rect: Rectangle) -> Result<(), ()> {
     Ok(())
 }

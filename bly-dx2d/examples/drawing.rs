@@ -4,15 +4,15 @@
 extern crate log;
 extern crate env_logger as logger;
 
-use std::env;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use std::env;
 use windows::Win32::UI::WindowsAndMessaging::PostQuitMessage;
+use winit::platform::windows::WindowExtWindows;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::WindowBuilder,
 };
-use winit::platform::windows::WindowExtWindows;
 
 fn main() {
     env::set_var("RUST_LOG", "info");
@@ -28,7 +28,6 @@ fn main() {
 
     let mut backend = bly_dx2d::create_backend(window.hwnd()).unwrap();
 
-
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_wait();
         match event {
@@ -39,14 +38,13 @@ fn main() {
             Event::MainEventsCleared => {
                 window.request_redraw();
                 unsafe {
-                    backend.clear(100.0,100.0,100.0,100.0);
+                    backend.clear(100.0, 100.0, 100.0, 100.0);
                 }
-            },
+            }
             Event::LoopDestroyed => unsafe {
                 backend.destroy();
-            }
+            },
             _ => (),
         }
     });
-
 }

@@ -3,5 +3,8 @@ members = [
     "bly",
 
     # Backends
-    "bly-dx2d"
+    "bly-dx2d",
+
+    # Abstraction crate
+    "bly-ac"
 ]
