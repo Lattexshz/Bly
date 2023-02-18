@@ -45,7 +45,6 @@
 //! }
 //! ```
 
-pub(crate) mod platform_impl;
 pub mod primitive;
 
 #[macro_use]
@@ -60,7 +59,7 @@ pub struct Bly {
 
 impl Bly {
     pub fn clear(&self,color: Color) {
-        self.backend.clear();
+        self.backend.clear(color_to_vec(color));
     }
 }
 
@@ -85,9 +84,9 @@ impl Backend {
         }
     }
 
-    pub fn clear(&self) {
+    pub fn clear(&self,color:Vec4) {
         unsafe {
-            self.backend.clear(255.0,255.0,255.0,0.0);
+            self.backend.clear(color.0 as f32, color.1 as f32, color.2 as f32, color.3 as f32).unwrap();
         }
     }
 }
@@ -120,4 +119,17 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly {
 /// Fills the Window background with the specified color. (bly initialization is required)
 pub fn fill(color: Color) -> Result<(), ()> {
     Ok(())
+}
+
+fn color_to_vec(color: Color) -> Vec4 {
+    match color {
+        Color::White => Vec4(255.0,255.0,255.0,0.0),
+        Color::WhiteGray => Vec4(240.0,240.0,240.0,0.0),
+        Color::Gray => Vec4(128.0,128.0,128.0,128.0),
+        Color::Black => Vec4(0.0,0.0,0.0,255.0),
+        Color::Red => Vec4(255.0,0.0,0.0,255.0),
+        Color::Green => Vec4(0.0,255.0,0.0,255.0),
+        Color::Blue => Vec4(0.0,0.0,255.0,255.0),
+        Color::Rgba(r,g,b,a) => Vec4(r as f64, g as f64, b as f64, a as f64)
+    }
 }
