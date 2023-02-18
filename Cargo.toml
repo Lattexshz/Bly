@@ -4,6 +4,7 @@ members = [
 
     # Backends
     "bly-dx2d",
+    "bly-cairo",
 
     # Abstraction crate
     "bly-ac"

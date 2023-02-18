@@ -92,13 +92,18 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Xlib(_) => panic!("This platform is not supported"),
+        #[cfg(target_os="linux")]
+        RawWindowHandle::Xlib(handle) => {
+            {
+                bly_cairo::create_backend(handle.window)
+            }
+        },
         RawWindowHandle::Xcb(_) => panic!("This platform is not supported"),
         RawWindowHandle::Wayland(_) => panic!("This platform is not supported"),
         RawWindowHandle::Drm(_) => panic!("This platform is not supported"),
         RawWindowHandle::Gbm(_) => panic!("This platform is not supported"),
+        #[cfg(target_os="windows")]
         RawWindowHandle::Win32(handle) => {
-            #[cfg(target_os="windows")]
             {
                 bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
             }
