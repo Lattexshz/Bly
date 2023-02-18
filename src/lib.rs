@@ -45,21 +45,24 @@
 //! }
 //! ```
 
-mod platform_impl;
+pub(crate) mod platform_impl;
+pub mod primitive;
 
 #[macro_use]
 extern crate log;
 
-use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use crate::platform_impl::{_fill, get_color};
+use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-static mut HANDLE:Option<RawWindowHandle> = None;
+pub static mut HANDLE: Option<RawWindowHandle> = None;
 
 /// Mainly used to store vertex information
-pub struct Vec4(pub f64,pub f64,pub f64,pub f64);
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Vec4(pub f64, pub f64, pub f64, pub f64);
 
 /// Enumeration of colors defined by default.
 /// Used to specify fill color, etc.
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
 pub enum Color {
     White,
     WhiteGray,
@@ -68,47 +71,64 @@ pub enum Color {
     Red,
     Green,
     Blue,
-    Rgba(u32,u32,u32,u32)
+    Rgba(u32, u32, u32, u32),
 }
 
 /// Initialize bly
-pub fn init(handle:&impl HasRawWindowHandle)
-{
+pub fn init(handle: &impl HasRawWindowHandle) {
     unsafe {
         HANDLE = Some(handle.raw_window_handle());
     }
 }
 
 /// Fills the Window background with the specified color. (bly initialization is required)
-pub fn fill(color: Color) -> Result<(),()>{
-    let handle = match unsafe {HANDLE} {
+pub fn fill(color: Color) -> Result<(), ()> {
+    let handle = match unsafe { HANDLE } {
         None => {
             error!("Method 'draw_point' cannot be performed because Bly is not initialized.");
             return Err(());
         }
-        Some(s) => s
+        Some(s) => s,
     };
 
     match handle {
-        RawWindowHandle::UiKit(_) => {}
-        RawWindowHandle::AppKit(handle) => {
-
+        RawWindowHandle::UiKit(_) => {
+            error!("This platform is not supported");
         }
-        RawWindowHandle::Orbital(_) => {}
-        RawWindowHandle::Xlib(_) => {}
-        RawWindowHandle::Xcb(_) => {}
-        RawWindowHandle::Wayland(_) => {}
-        RawWindowHandle::Drm(_) => {}
-        RawWindowHandle::Gbm(_) => {}
-        RawWindowHandle::Win32(handle) => {
-            unsafe {
-                _fill(handle.hwnd,get_color(color));
-            }
+        RawWindowHandle::AppKit(handle) => {}
+        RawWindowHandle::Orbital(_) => {
+            error!("This platform is not supported");
         }
-        RawWindowHandle::WinRt(_) => {}
-        RawWindowHandle::Web(_) => {}
-        RawWindowHandle::AndroidNdk(_) => {}
-        RawWindowHandle::Haiku(_) => {}
+        RawWindowHandle::Xlib(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Xcb(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Wayland(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Drm(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Gbm(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Win32(handle) => unsafe {
+            _fill(handle.hwnd, get_color(color));
+        },
+        RawWindowHandle::WinRt(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Web(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::AndroidNdk(_) => {
+            error!("This platform is not supported");
+        }
+        RawWindowHandle::Haiku(_) => {
+            error!("This platform is not supported");
+        }
         _ => {}
     };
 
