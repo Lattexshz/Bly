@@ -1,3 +1,50 @@
+//! # Bly - The 2D graphics Library
+//! ## Bly is a simple 2D graphics library made in Rust.
+//!
+//! ## Example
+//! ```Rust
+//! #![allow(clippy::single_match)]
+//!
+//! use raw_window_handle::HasRawWindowHandle;
+//! use winit::{
+//!     event::{Event, WindowEvent},
+//!     event_loop::EventLoop,
+//!     window::WindowBuilder,
+//!};
+//!
+//! fn main() {
+//!     let event_loop = EventLoop::new();
+//!
+//!     // Create window
+//!     let window = WindowBuilder::new()
+//!         .with_title("A fantastic window!")
+//!         .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
+//!         .build(&event_loop)
+//!         .unwrap();
+//!
+//!    // Initialize bly with window.
+//!    bly::init(&window);
+//!
+//!     // Run Application
+//!     event_loop.run(move |event, _, control_flow| {
+//!         control_flow.set_wait();
+//!         match event {
+//!             Event::WindowEvent {
+//!                 event: WindowEvent::CloseRequested,
+//!                 window_id,
+//!             } if window_id == window.id() => control_flow.set_exit(),
+//!             Event::MainEventsCleared => {
+//!             },
+//!             Event::RedrawEventsCleared => {
+//!                 // Fills the Window with the specified color
+//!                 bly::fill(bly::Color::Red);
+//!             }
+//!             _ => (),
+//!         }
+//!     });
+//! }
+//! ```
+
 mod platform_impl;
 
 #[macro_use]
@@ -8,8 +55,11 @@ use crate::platform_impl::{_fill, get_color};
 
 static mut HANDLE:Option<RawWindowHandle> = None;
 
+/// Mainly used to store vertex information
 pub struct Vec4(pub f64,pub f64,pub f64,pub f64);
 
+/// Enumeration of colors defined by default.
+/// Used to specify fill color, etc.
 pub enum Color {
     White,
     WhiteGray,
@@ -21,10 +71,7 @@ pub enum Color {
     Rgba(u32,u32,u32,u32)
 }
 
-pub fn add(left: usize, right: usize) -> usize {
-    left + right
-}
-
+/// Initialize bly
 pub fn init(handle:&impl HasRawWindowHandle)
 {
     unsafe {
@@ -32,6 +79,7 @@ pub fn init(handle:&impl HasRawWindowHandle)
     }
 }
 
+/// Fills the Window background with the specified color. (bly initialization is required)
 pub fn fill(color: Color) -> Result<(),()>{
     let handle = match unsafe {HANDLE} {
         None => {
@@ -65,15 +113,4 @@ pub fn fill(color: Color) -> Result<(),()>{
     };
 
     Ok(())
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
 }
