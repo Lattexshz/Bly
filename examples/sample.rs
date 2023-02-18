@@ -32,7 +32,7 @@ fn main() {
             Event::MainEventsCleared => {
             },
             Event::RedrawEventsCleared => {
-                bly::fill(bly::Color::White);
+                bly::fill(bly::Color::WhiteGray);
             }
             _ => (),
         }

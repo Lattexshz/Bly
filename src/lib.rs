@@ -3,9 +3,8 @@ mod platform_impl;
 #[macro_use]
 extern crate log;
 
-use raw_window_handle::{HasRawDisplayHandle, HasRawWindowHandle, RawWindowHandle};
-use once_cell::sync::Lazy;
-use crate::platform_impl::_fill;
+use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use crate::platform_impl::{_fill, get_color};
 
 static mut HANDLE:Option<RawWindowHandle> = None;
 
@@ -13,6 +12,12 @@ pub struct Vec4(pub f64,pub f64,pub f64,pub f64);
 
 pub enum Color {
     White,
+    WhiteGray,
+    Gray,
+    Black,
+    Red,
+    Green,
+    Blue,
     Rgba(u32,u32,u32,u32)
 }
 
@@ -49,7 +54,7 @@ pub fn fill(color: Color) -> Result<(),()>{
         RawWindowHandle::Gbm(_) => {}
         RawWindowHandle::Win32(handle) => {
             unsafe {
-                _fill(handle.hwnd);
+                _fill(handle.hwnd,get_color(color));
             }
         }
         RawWindowHandle::WinRt(_) => {}
