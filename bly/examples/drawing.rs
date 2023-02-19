@@ -2,15 +2,15 @@
 
 extern crate env_logger as logger;
 
-use bly::Color;
+use bly::{Bly, Color};
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use std::env;
+use winit::event::{KeyboardInput, ScanCode};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::WindowBuilder,
 };
-use winit::event::{KeyboardInput, ScanCode};
 
 fn main() {
     env::set_var("RUST_LOG", "info");
@@ -24,7 +24,13 @@ fn main() {
         .build(&event_loop)
         .unwrap();
 
-    let mut bly = bly::init(&window);
+    let mut bly = match bly::init(&window) {
+        Ok(b) => b,
+        Err(_) => {
+            panic!("Can't initialize Bly!");
+        }
+    };
+
     let mut color = Color::Gray;
 
     event_loop.run(move |event, _, control_flow| {
@@ -37,23 +43,21 @@ fn main() {
             Event::WindowEvent {
                 event: WindowEvent::ReceivedCharacter(ch),
                 ..
-            } => {
-                match ch {
-                    'r' => {
-                        color = Color::Red;
-                    }
-                    'g' => {
-                        color = Color::Green;
-                    }
-                    'b' => {
-                        color = Color::Blue;
-                    }
-                    'w' => {
-                        color = Color::WhiteGray;
-                    }
-                    _ => {}
+            } => match ch {
+                'r' => {
+                    color = Color::Red;
                 }
-            }
+                'g' => {
+                    color = Color::Green;
+                }
+                'b' => {
+                    color = Color::Blue;
+                }
+                'w' => {
+                    color = Color::WhiteGray;
+                }
+                _ => {}
+            },
             Event::MainEventsCleared => {
                 window.request_redraw();
                 bly.clear(color);

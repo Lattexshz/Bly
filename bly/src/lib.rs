@@ -51,21 +51,19 @@ pub mod primitive;
 extern crate log;
 extern crate env_logger as logger;
 
-use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use bly_ac::Backend;
+use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-pub struct Bly
-{
+pub struct Bly {
     pub(crate) backend: Box<dyn Backend>,
 }
 
-impl Bly
-{
+impl Bly {
     pub fn clear(&mut self, color: Color) {
         unsafe {
-            let vec:Vec4 = color.into();
-            println!("{:?}",vec);
-            self.backend.clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
+            let vec: Vec4 = color.into();
+            self.backend
+                .clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
 }
@@ -104,39 +102,40 @@ impl Into<Vec4> for Color {
 }
 
 /// Initialize bly
-pub fn init(handle: &impl HasRawWindowHandle) -> Bly
-{
+pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     let mut backend = match handle.raw_window_handle() {
-        RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
-        RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),
-        #[cfg(target_os="linux")]
+        RawWindowHandle::UiKit(_) => return Err(()),
+        RawWindowHandle::AppKit(_) => return Err(()),
+        RawWindowHandle::Orbital(_) => return Err(()),
+        #[cfg(target_os = "linux")]
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
                 bly_cairo::create_backend(handle.window)
             }
-        },
-        RawWindowHandle::Xcb(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Wayland(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Drm(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Gbm(_) => panic!("This platform is not supported"),
-        #[cfg(target_os="windows")]
+        }
+        RawWindowHandle::Xcb(_) => return Err(()),
+        RawWindowHandle::Wayland(_) => return Err(()),
+        RawWindowHandle::Drm(_) => return Err(()),
+        RawWindowHandle::Gbm(_) => return Err(()),
+        #[cfg(target_os = "windows")]
         RawWindowHandle::Win32(handle) => {
             info!("Platform: Win32 Drawing backend is Dx2D");
             {
                 bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
             }
         }
-        RawWindowHandle::WinRt(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Web(_) => panic!("This platform is not supported"),
-        RawWindowHandle::AndroidNdk(_) => panic!("This platform is not supported"),
-        RawWindowHandle::Haiku(_) => panic!("This platform is not supported"),
-        _ => panic!("This platform is not supported"),
+        RawWindowHandle::WinRt(_) => return Err(()),
+        RawWindowHandle::Web(_) => return Err(()),
+        RawWindowHandle::AndroidNdk(_) => return Err(()),
+        RawWindowHandle::Haiku(_) => return Err(()),
+        _ => return Err(()),
     };
     info!("Successfully acquired backend");
-    unsafe {backend.clear(255.0,255.0,255.0,255.0);}
-    Bly {
-        backend:Box::new(backend),
+    unsafe {
+        backend.clear(255.0, 255.0, 255.0, 255.0);
     }
+    Ok(Bly {
+        backend: Box::new(backend),
+    })
 }
