@@ -64,6 +64,7 @@ impl Bly
     pub fn clear(&self, color: Color) {
         unsafe {
             let vec:Vec4 = color.into();
+            println!("{:?}",vec);
             self.backend.clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
@@ -91,8 +92,8 @@ impl Into<Vec4> for Color {
     fn into(self) -> Vec4 {
         match self {
             Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
-            Color::WhiteGray => Vec4(240.0, 240.0, 240.0, 0.0),
-            Color::Gray => Vec4(128.0, 128.0, 128.0, 128.0),
+            Color::WhiteGray => Vec4(230.0, 230.0, 230.0, 0.0),
+            Color::Gray => Vec4(0.9, 0.9, 0.9, 0.0),
             Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
             Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),
             Color::Green => Vec4(0.0, 255.0, 0.0, 255.0),

@@ -10,6 +10,7 @@ use winit::{
     event_loop::EventLoop,
     window::WindowBuilder,
 };
+use winit::event::{KeyboardInput, ScanCode};
 
 fn main() {
     env::set_var("RUST_LOG", "info");
@@ -24,6 +25,7 @@ fn main() {
         .unwrap();
 
     let bly = bly::init(&window);
+    let mut color = Color::Gray;
 
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_wait();
@@ -32,9 +34,29 @@ fn main() {
                 event: WindowEvent::CloseRequested,
                 window_id,
             } if window_id == window.id() => control_flow.set_exit(),
+            Event::WindowEvent {
+                event: WindowEvent::ReceivedCharacter(ch),
+                ..
+            } => {
+                match ch {
+                    'r' => {
+                        color = Color::Red;
+                    }
+                    'g' => {
+                        color = Color::Green;
+                    }
+                    'b' => {
+                        color = Color::Blue;
+                    }
+                    'w' => {
+                        color = Color::WhiteGray;
+                    }
+                    _ => {}
+                }
+            }
             Event::MainEventsCleared => {
                 window.request_redraw();
-                bly.clear(Color::Green);
+                bly.clear(color);
             }
             Event::LoopDestroyed => unsafe {},
             _ => (),
