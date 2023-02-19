@@ -94,7 +94,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),
-        #[cfg(target_os="unix")]
+        #[cfg(target_os="linux")]
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
