@@ -105,7 +105,10 @@ impl Into<Vec4> for Color {
 pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     let mut backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
-        RawWindowHandle::AppKit(_) => return Err(()),
+        #[cfg(target_os = "macos")]
+        RawWindowHandle::AppKit(handle) => {
+            bly_corefoundation::create_backend()
+        },
         RawWindowHandle::Orbital(_) => return Err(()),
         #[cfg(target_os = "linux")]
         RawWindowHandle::Xlib(handle) => {
