@@ -25,7 +25,7 @@ pub struct Direct2DBackend {
 }
 
 impl Backend for Direct2DBackend {
-    unsafe fn clear(&self, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         let target = self.target.as_ref().unwrap();
         target.BeginDraw();
         target.Clear(&D2D1_COLOR_F { r, g, b, a });
@@ -35,7 +35,7 @@ impl Backend for Direct2DBackend {
             .unwrap();
     }
 
-    unsafe fn resize(&self, width: u32, height: u32) {
+    unsafe fn resize(&mut self, width: u32, height: u32) {
 
     }
 }

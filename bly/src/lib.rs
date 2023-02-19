@@ -61,7 +61,7 @@ pub struct Bly
 
 impl Bly
 {
-    pub fn clear(&self, color: Color) {
+    pub fn clear(&mut self, color: Color) {
         unsafe {
             let vec:Vec4 = color.into();
             println!("{:?}",vec);
@@ -106,7 +106,7 @@ impl Into<Vec4> for Color {
 /// Initialize bly
 pub fn init(handle: &impl HasRawWindowHandle) -> Bly
 {
-    let backend = match handle.raw_window_handle() {
+    let mut backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),

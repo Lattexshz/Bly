@@ -20,11 +20,11 @@ fn main() {
 
     let window = WindowBuilder::new()
         .with_title("A fantastic window!")
-        .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
+        .with_inner_size(winit::dpi::LogicalSize::new(128.0, 120.0))
         .build(&event_loop)
         .unwrap();
 
-    let bly = bly::init(&window);
+    let mut bly = bly::init(&window);
     let mut color = Color::Gray;
 
     event_loop.run(move |event, _, control_flow| {
