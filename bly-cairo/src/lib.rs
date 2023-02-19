@@ -1,7 +1,7 @@
 mod util;
 
 use std::ffi::{c_double, c_int, c_ulong};
-use cairo::ffi::{cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_rectangle, cairo_set_source_rgb, cairo_surface_create_similar, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
+use cairo::ffi::{cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_rectangle, cairo_scale, cairo_set_source_rgb, cairo_surface_create_similar, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
 use cairo::Surface;
 use x11::xlib::{Display, XDefaultVisual, XGetGeometry, XOpenDisplay};
 use bly_ac::Backend;
@@ -35,9 +35,14 @@ pub struct CairoBackend {
 impl Backend for CairoBackend {
     unsafe fn clear(&self, r: f32, g: f32, b: f32, a: f32) {
         let (width,height) = util::get_xlib_window_size(self.display,self.handle);
+        Self::resize(self,width,height);
         cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
         cairo_rectangle(self.cairo, 0 as c_double, 0 as c_double, width as c_double, height as c_double);
         cairo_fill(self.cairo);
+    }
+
+    unsafe fn resize(&self, width: u32, height: u32) {
+        cairo_scale(self.cairo, width as c_double, height as c_double);
     }
 }
 

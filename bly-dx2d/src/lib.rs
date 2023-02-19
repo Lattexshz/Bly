@@ -34,6 +34,10 @@ impl Backend for Direct2DBackend {
             .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
             .unwrap();
     }
+
+    unsafe fn resize(&self, width: u32, height: u32) {
+
+    }
 }
 
 impl Direct2DBackend {
