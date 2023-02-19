@@ -66,6 +66,12 @@ impl Bly {
                 .clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
+
+    pub fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
+        unsafe {
+            self.backend.draw_rect(left,top,right,bottom,r,g,b,a);
+        }
+    }
 }
 /// Mainly used to store vertex information
 #[derive(Debug, Copy, Clone, PartialEq)]

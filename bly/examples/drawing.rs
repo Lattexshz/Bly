@@ -20,7 +20,7 @@ fn main() {
 
     let window = WindowBuilder::new()
         .with_title("A fantastic window!")
-        .with_inner_size(winit::dpi::LogicalSize::new(128.0, 120.0))
+        .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
         .build(&event_loop)
         .unwrap();
 
@@ -61,6 +61,7 @@ fn main() {
             Event::MainEventsCleared => {
                 window.request_redraw();
                 bly.clear(color);
+                bly.draw_rect(590.0,310.0,690.0,410.0,0.0,1.0,1.0,1.0);
             }
             Event::LoopDestroyed => unsafe {},
             _ => (),

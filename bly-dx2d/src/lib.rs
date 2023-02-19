@@ -29,10 +29,46 @@ impl Backend for Direct2DBackend {
         let target = self.target.as_ref().unwrap();
         target.BeginDraw();
         target.Clear(&D2D1_COLOR_F { r, g, b, a });
-
         target
             .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
             .unwrap();
+    }
+
+    unsafe fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
+        let target = self.target.as_ref().unwrap();
+
+
+        target.BeginDraw();
+
+        let color = D2D1_COLOR_F {
+            r,
+            g,
+            b,
+            a,
+        };
+
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: 0.8,
+            transform: Matrix3x2::identity(),
+        };
+
+
+        let render_size = target.GetSize();
+        let brush1 = &target.CreateSolidColorBrush(&color, &properties).unwrap();
+        // Draw two rectangles.
+        let rx = render_size.width / 2.0;
+        let ry = render_size.height / 2.0;
+
+        let rect1 = D2D_RECT_F {
+            left,
+            right,
+            top,
+            bottom,
+        };
+
+        target.FillRectangle(&rect1, brush1);
+
+        target.EndDraw(std::ptr::null_mut(),std::ptr::null_mut()).unwrap();
     }
 }
 
