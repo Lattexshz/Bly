@@ -1,13 +1,10 @@
 #![allow(clippy::single_match)]
 
-#[macro_use]
-extern crate log;
 extern crate env_logger as logger;
 
-use bly::{fill, Color};
+use bly::Color;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use std::env;
-use winit::platform::windows::WindowExtWindows;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
@@ -37,7 +34,7 @@ fn main() {
             } if window_id == window.id() => control_flow.set_exit(),
             Event::MainEventsCleared => {
                 window.request_redraw();
-                bly.clear(Color::White);
+                bly.clear(Color::Green);
             }
             Event::LoopDestroyed => unsafe {},
             _ => (),

@@ -49,6 +49,7 @@ pub mod primitive;
 
 #[macro_use]
 extern crate log;
+extern crate env_logger as logger;
 
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use bly_ac::Backend;
@@ -63,6 +64,7 @@ impl Bly
     pub fn clear(&self, color: Color) {
         unsafe {
             let vec = color_to_vec(color);
+            info!("Colors to Clear: {:?}",vec);
             self.backend.clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
@@ -92,8 +94,9 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         RawWindowHandle::UiKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::AppKit(_) => panic!("This platform is not supported"),
         RawWindowHandle::Orbital(_) => panic!("This platform is not supported"),
-        #[cfg(target_os="linux")]
+        #[cfg(target_os="unix")]
         RawWindowHandle::Xlib(handle) => {
+            info!("Platform: Xlib Drawing backend is Cairo");
             {
                 bly_cairo::create_backend(handle.window)
             }
@@ -104,6 +107,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         RawWindowHandle::Gbm(_) => panic!("This platform is not supported"),
         #[cfg(target_os="windows")]
         RawWindowHandle::Win32(handle) => {
+            info!("Platform: Win32 Drawing backend is Dx2D");
             {
                 bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
             }
@@ -114,16 +118,13 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         RawWindowHandle::Haiku(_) => panic!("This platform is not supported"),
         _ => panic!("This platform is not supported"),
     };
+    info!("Successfully acquired backend");
     Bly {
         backend:Box::new(backend),
     }
 }
 
-/// Fills the Window background with the specified color. (bly initialization is required)
-pub fn fill(color: Color) -> Result<(), ()> {
-    Ok(())
-}
-
+/// Converts a Color enumerator to a vector.
 fn color_to_vec(color: Color) -> Vec4 {
     match color {
         Color::White => Vec4(255.0, 255.0, 255.0, 0.0),

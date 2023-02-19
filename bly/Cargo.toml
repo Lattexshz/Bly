@@ -16,7 +16,7 @@ bly-ac = { path = "../bly-ac" }
 [target."cfg(windows)".dependencies]
 bly-dx2d = { path = "../bly-dx2d" }
 
-[target."cfg(linux)".dependencies]
+[target."cfg(unix)".dependencies]
 bly-cairo = { path = "../bly-cairo" }
 
 [dev-dependencies]
