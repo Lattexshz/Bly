@@ -63,8 +63,7 @@ impl Bly
 {
     pub fn clear(&self, color: Color) {
         unsafe {
-            let vec = color_to_vec(color);
-            info!("Colors to Clear: {:?}",vec);
+            let vec:Vec4 = color.into();
             self.backend.clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
@@ -85,6 +84,22 @@ pub enum Color {
     Green,
     Blue,
     Rgba(u32, u32, u32, u32),
+}
+
+// Converts a Color enumerator to a vector.
+impl Into<Vec4> for Color {
+    fn into(self) -> Vec4 {
+        match self {
+            Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
+            Color::WhiteGray => Vec4(240.0, 240.0, 240.0, 0.0),
+            Color::Gray => Vec4(128.0, 128.0, 128.0, 128.0),
+            Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
+            Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),
+            Color::Green => Vec4(0.0, 255.0, 0.0, 255.0),
+            Color::Blue => Vec4(0.0, 0.0, 255.0, 255.0),
+            Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
+        }
+    }
 }
 
 /// Initialize bly
@@ -119,21 +134,8 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Bly
         _ => panic!("This platform is not supported"),
     };
     info!("Successfully acquired backend");
+    unsafe {backend.clear(255.0,255.0,255.0,255.0);}
     Bly {
         backend:Box::new(backend),
-    }
-}
-
-/// Converts a Color enumerator to a vector.
-fn color_to_vec(color: Color) -> Vec4 {
-    match color {
-        Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
-        Color::WhiteGray => Vec4(240.0, 240.0, 240.0, 0.0),
-        Color::Gray => Vec4(128.0, 128.0, 128.0, 128.0),
-        Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
-        Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),
-        Color::Green => Vec4(0.0, 255.0, 0.0, 255.0),
-        Color::Blue => Vec4(0.0, 0.0, 255.0, 255.0),
-        Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
     }
 }

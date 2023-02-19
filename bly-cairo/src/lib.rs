@@ -14,11 +14,6 @@ pub fn create_backend(window: c_ulong) -> CairoBackend {
         let surface = cairo_xlib_surface_create(display, window, XDefaultVisual(display,0), width as c_int, height as c_int);
         let cairo = cairo_create(surface);
 
-        // Display initializing
-        cairo_set_source_rgb(cairo, 255.0,255.0,255.0);
-        cairo_rectangle(cairo, 0 as c_double, 0 as c_double, width as c_double, height as c_double);
-        cairo_fill(cairo);
-
         CairoBackend {
             handle: window,
             display,
