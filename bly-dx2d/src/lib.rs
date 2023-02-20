@@ -42,7 +42,7 @@ impl Backend for Direct2DBackend {
         target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
-    unsafe fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
         let target = self.target.as_ref().unwrap();
         let color = D2D1_COLOR_F {
             r,
@@ -64,10 +64,10 @@ impl Backend for Direct2DBackend {
         let ry = render_size.height / 2.0;
 
         let rect1 = D2D_RECT_F {
-            left,
-            right,
-            top,
-            bottom,
+            left:width,
+            right:x,
+            top:y,
+            bottom:height,
         };
 
         target.FillRectangle(&rect1, brush1);

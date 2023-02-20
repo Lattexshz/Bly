@@ -81,9 +81,9 @@ impl Bdc {
         }
     }
 
-    pub fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
+    pub fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
         unsafe {
-            self.backend.draw_rect(left,top,right,bottom,r,g,b,a);
+            self.backend.draw_rect(x,y,width,height,r,g,b,a);
         }
     }
 }

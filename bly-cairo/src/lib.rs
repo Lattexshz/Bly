@@ -48,17 +48,15 @@ pub struct CairoBackend {
 
 impl Backend for CairoBackend {
     unsafe fn begin_draw(&mut self) {
-
+        self.scale(width, height);
     }
 
     unsafe fn flush(&mut self) {
-
+        XFlush(self.display);
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         let (width, height) = util::get_xlib_window_size(self.display, self.handle);
-
-        self.scale(width, height);
 
         cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
         cairo_rectangle(
@@ -69,12 +67,18 @@ impl Backend for CairoBackend {
             height as c_double,
         );
         cairo_fill(self.cairo);
-
-        XFlush(self.display);
     }
 
-    unsafe fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
-
+    unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
+        cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
+        cairo_rectangle(
+            self.cairo,
+            x as c_double,
+            y as c_double,
+            width as c_double,
+            height as c_double,
+        );
+        cairo_fill(self.cairo);
     }
 }
 
