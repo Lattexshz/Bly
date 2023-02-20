@@ -87,18 +87,13 @@ impl Backend for CairoBackend {
 
     unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
         let (width,height) = util::get_xlib_window_size(self.display,self.handle);
-        let xc = width / 2;
-        let yc = height / 2;
 
-        cairo_set_line_width(self.cairo,10.0);
+        cairo_set_line_width(self.cairo,stroke as c_double);
 
-        // draw red lines out from the center of the window
         cairo_set_source_rgba(self.cairo, r as c_double, g as c_double, b as c_double,a as c_double);
-        cairo_move_to(self.cairo,0.0, 0.0);
-        cairo_line_to(self.cairo, xc as c_double, yc as c_double);
-        cairo_line_to(self.cairo, 0.0, height as c_double);
-        cairo_move_to(self.cairo, xc as c_double, yc as c_double);
-        cairo_line_to(self.cairo, width as c_double, yc as c_double);
+        cairo_move_to(self.cairo,x1 as c_double, y1 as c_double);
+        cairo_line_to(self.cairo, x2 as c_double, y2 as c_double);
+    
         cairo_stroke(self.cairo);
     }
 }
