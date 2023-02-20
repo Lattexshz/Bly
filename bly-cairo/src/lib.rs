@@ -48,11 +48,17 @@ pub struct CairoBackend {
 
 impl Backend for CairoBackend {
     unsafe fn begin_draw(&mut self) {
+        let (width, height) = util::get_xlib_window_size(self.display, self.handle);
         self.scale(width, height);
     }
 
     unsafe fn flush(&mut self) {
         XFlush(self.display);
+    }
+
+    unsafe fn get_display_size(&mut self) -> (u32, u32) {
+        let (width, height) = util::get_xlib_window_size(self.display, self.handle);
+        (width as u32,height as u32)
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {

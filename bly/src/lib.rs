@@ -73,6 +73,12 @@ impl Bdc {
         }
     }
 
+    pub fn get_size(&mut self) -> (u32,u32) {
+        unsafe {
+            self.backend.get_display_size()
+        }
+    }
+
     pub fn clear(&mut self, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -123,7 +129,7 @@ impl Into<Vec4> for Color {
     fn into(self) -> Vec4 {
         match self {
             Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
-            Color::WhiteGray => Vec4(230.0, 230.0, 230.0, 0.0),
+            Color::WhiteGray => Vec4(0.9, 0.9, 0.9, 0.0),
             Color::Gray => Vec4(0.9, 0.9, 0.9, 0.0),
             Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
             Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),

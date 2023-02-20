@@ -20,9 +20,11 @@ fn main() {
 
     let window = WindowBuilder::new()
         .with_title("A fantastic window!")
-        .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
+        .with_inner_size(winit::dpi::LogicalSize::new(520.0, 520.0))
         .build(&event_loop)
         .unwrap();
+
+
 
     let mut bly = match bly::init(&window) {
         Ok(b) => b,
@@ -59,11 +61,20 @@ fn main() {
                 _ => {}
             },
             Event::MainEventsCleared => {
-                window.request_redraw();
-                //bly.clear(color);
                 bly.draw(| bdc| {
                     bdc.clear(color);
-                    bdc.draw_rect(10.0,10.0,550.0,250.0,0.0,1.0,1.0,1.0);
+                    bdc.draw_rect(20.0,20.0, 150.0, 150.0, 1.0, 1.0, 1.0, 1.0);
+                    bdc.draw_rect(180.0,20.0, 150.0, 150.0, 0.5, 0.5, 0.5, 1.0);
+                    bdc.draw_rect(340.0,20.0, 150.0, 150.0, 0.0, 0.0, 0.0, 1.0);
+
+                    bdc.draw_rect(20.0,180.0, 150.0, 150.0, 1.0, 0.0, 0.0, 1.0);
+                    bdc.draw_rect(180.0,180.0, 150.0, 150.0, 0.0, 1.0, 0.0, 1.0);
+                    bdc.draw_rect(340.0,180.0, 150.0, 150.0, 0.0, 0.0, 1.0, 1.0);
+
+                    bdc.draw_rect(20.0,340.0, 150.0, 150.0, 1.0, 1.0, 0.0, 1.0);
+                    bdc.draw_rect(180.0,340.0, 150.0, 150.0, 0.0, 1.0, 1.0, 1.0);
+                    bdc.draw_rect(340.0,340.0, 150.0, 150.0, 1.0, 0.0, 1.0, 1.0);
+
                 })
             }
             Event::LoopDestroyed => unsafe {},

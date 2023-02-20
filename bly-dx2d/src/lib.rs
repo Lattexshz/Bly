@@ -37,6 +37,14 @@ impl Backend for Direct2DBackend {
             .unwrap();
     }
 
+    unsafe fn get_display_size(&mut self) -> (u32, u32) {
+        let target = self.target.as_ref().unwrap();
+        unsafe {
+            let size = target.GetSize();
+            (size.width as u32,size.height as u32)
+        }
+    }
+
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         let target = self.target.as_ref().unwrap();
         target.Clear(&D2D1_COLOR_F { r, g, b, a });
@@ -59,15 +67,12 @@ impl Backend for Direct2DBackend {
 
         let render_size = target.GetSize();
         let brush1 = &target.CreateSolidColorBrush(&color, &properties).unwrap();
-        // Draw two rectangles.
-        let rx = render_size.width / 2.0;
-        let ry = render_size.height / 2.0;
 
         let rect1 = D2D_RECT_F {
-            left:width,
-            right:x,
+            left:x,
+            right:x+width,
             top:y,
-            bottom:height,
+            bottom:y+height
         };
 
         target.FillRectangle(&rect1, brush1);

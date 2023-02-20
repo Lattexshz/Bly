@@ -12,7 +12,7 @@
 git clone https://github.com/Lattexshz/Bly
 cd Bly
 cd bly
-cargo run --example drawing
+cargo run --example tiles
 ```
 
 # Crates
