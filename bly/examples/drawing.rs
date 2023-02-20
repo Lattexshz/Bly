@@ -60,8 +60,13 @@ fn main() {
             },
             Event::MainEventsCleared => {
                 window.request_redraw();
-                bly.clear(color);
-                bly.draw_rect(590.0,310.0,690.0,410.0,0.0,1.0,1.0,1.0);
+                //bly.clear(color);
+                bly.draw(| bdc| {
+                    bdc.clear(color);
+                    bdc.draw_rect(590.0,310.0,690.0,410.0,0.0,1.0,1.0,1.0);
+                    bdc.draw_rect(290.0,110.0,490.0,210.0,0.0,0.0,1.0,1.0);
+                    bdc.draw_rect(790.0,510.0,890.0,610.0,1.0,0.0,1.0,1.0);
+                })
             }
             Event::LoopDestroyed => unsafe {},
             _ => (),

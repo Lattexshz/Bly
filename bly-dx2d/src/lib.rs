@@ -25,21 +25,25 @@ pub struct Direct2DBackend {
 }
 
 impl Backend for Direct2DBackend {
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn begin_draw(&mut self) {
         let target = self.target.as_ref().unwrap();
         target.BeginDraw();
-        target.Clear(&D2D1_COLOR_F { r, g, b, a });
+    }
+
+    unsafe fn flush(&mut self) {
+        let target = self.target.as_ref().unwrap();
         target
             .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
             .unwrap();
     }
 
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+        let target = self.target.as_ref().unwrap();
+        target.Clear(&D2D1_COLOR_F { r, g, b, a });
+    }
+
     unsafe fn draw_rect(&mut self, left: f32, top: f32, right: f32, bottom: f32, r: f32, g: f32, b: f32, a: f32) {
         let target = self.target.as_ref().unwrap();
-
-
-        target.BeginDraw();
-
         let color = D2D1_COLOR_F {
             r,
             g,
@@ -67,8 +71,6 @@ impl Backend for Direct2DBackend {
         };
 
         target.FillRectangle(&rect1, brush1);
-
-        target.EndDraw(std::ptr::null_mut(),std::ptr::null_mut()).unwrap();
     }
 }
 

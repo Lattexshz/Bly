@@ -54,11 +54,25 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-pub struct Bly {
+pub struct Bdc {
     pub(crate) backend: Box<dyn Backend>,
 }
 
-impl Bly {
+/// # Bly Drawing Context
+impl Bdc {
+
+    pub(crate) fn begin_draw(&mut self) {
+        unsafe {
+            self.backend.begin_draw();
+        }
+    }
+
+    pub(crate) fn flush(&mut self) {
+        unsafe {
+            self.backend.flush();
+        }
+    }
+
     pub fn clear(&mut self, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -71,6 +85,19 @@ impl Bly {
         unsafe {
             self.backend.draw_rect(left,top,right,bottom,r,g,b,a);
         }
+    }
+}
+
+pub struct Bly {
+    pub(crate) bdc: Bdc
+}
+
+impl Bly {
+    pub fn draw<F>(&mut self,mut f: F) where
+        F: FnMut(&mut Bdc) {
+        self.bdc.begin_draw();
+        f(&mut self.bdc);
+        self.bdc.flush();
     }
 }
 /// Mainly used to store vertex information
@@ -141,10 +168,9 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
         _ => return Err(()),
     };
     info!("Successfully acquired backend");
-    unsafe {
-        backend.clear(255.0, 255.0, 255.0, 255.0);
-    }
     Ok(Bly {
-        backend: Box::new(backend),
+        bdc: Bdc {
+            backend: Box::new(backend)
+        },
     })
 }
