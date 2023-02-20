@@ -70,6 +70,38 @@ impl Backend for Direct2DBackend {
 
         self.target.FillRectangle(&rect1, brush1);
     }
+
+    unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
+        let color = D2D1_COLOR_F {
+            r,
+            g,
+            b,
+            a,
+        };
+
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
+
+        let brush1 = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
+
+        let props = D2D1_STROKE_STYLE_PROPERTIES {
+            startCap: D2D1_CAP_STYLE_ROUND,
+            endCap: D2D1_CAP_STYLE_TRIANGLE,
+            ..Default::default()
+        };
+
+        let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
+
+        self.target.DrawLine(D2D_POINT_2F {
+            x:x1,
+            y:y1,
+        }, D2D_POINT_2F {
+            x: x2,
+            y: y2,
+        }, brush1, stroke, style);
+    }
 }
 
 fn create_target(hwnd:HWND,factory:&ID2D1Factory1) -> (ID2D1HwndRenderTarget,u32,u32) {

@@ -15,4 +15,6 @@ pub trait Backend {
     // Primitives
     /// Draws a rectangle
     unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32);
+
+    unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32);
 }
