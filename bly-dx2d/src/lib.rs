@@ -1,3 +1,5 @@
+//! Direct2D backend for Bly
+
 use bly_ac::Backend;
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
@@ -6,7 +8,7 @@ use windows::{
 
 /// Create the backend from hwnd. This is the only method available to the public.
 pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
-    let mut backend = Direct2DBackend::new(HWND(hwnd)).unwrap();
+    let backend = Direct2DBackend::new(HWND(hwnd)).unwrap();
 
     Ok(backend)
 }
@@ -57,8 +59,6 @@ impl Backend for Direct2DBackend {
             transform: Matrix3x2::identity(),
         };
 
-
-        let render_size = self.target.GetSize();
         let brush1 = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
 
         let rect1 = D2D_RECT_F {
@@ -96,10 +96,6 @@ fn create_target(hwnd:HWND,factory:&ID2D1Factory1) -> (ID2D1HwndRenderTarget,u32
         factory
             .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties).unwrap()
     };
-unsafe {
-&target.BeginDraw();
-&target.EndDraw(std::ptr::null_mut(), std::ptr::null_mut()).unwrap();
-}
     (target,(rect.right - rect.left) as u32,(rect.bottom - rect.top) as u32)
 }
 
@@ -170,14 +166,4 @@ fn create_factory() -> Result<ID2D1Factory1> {
         )
         .map(|()| result.unwrap())
     }
-}
-
-fn create_style(factory: &ID2D1Factory1) -> Result<ID2D1StrokeStyle> {
-    let props = D2D1_STROKE_STYLE_PROPERTIES {
-        startCap: D2D1_CAP_STYLE_ROUND,
-        endCap: D2D1_CAP_STYLE_TRIANGLE,
-        ..Default::default()
-    };
-
-    unsafe { factory.CreateStrokeStyle(&props, &[]) }
 }

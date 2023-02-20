@@ -1,3 +1,5 @@
+//! Cairo backend for Bly
+
 mod util;
 
 use bly_ac::Backend;

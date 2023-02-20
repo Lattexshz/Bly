@@ -1,52 +1,6 @@
 //! # Bly - The 2D graphics Library
 //! ## Bly is a simple 2D graphics library made in Rust.
 //!
-//! ## Example
-//! ```Rust
-//! #![allow(clippy::single_match)]
-//!
-//! use raw_window_handle::HasRawWindowHandle;
-//! use winit::{
-//!     event::{Event, WindowEvent},
-//!     event_loop::EventLoop,
-//!     window::WindowBuilder,
-//!};
-//!
-//! fn main() {
-//!     let event_loop = EventLoop::new();
-//!
-//!     // Create window
-//!     let window = WindowBuilder::new()
-//!         .with_title("A fantastic window!")
-//!         .with_inner_size(winit::dpi::LogicalSize::new(1280.0, 720.0))
-//!         .build(&event_loop)
-//!         .unwrap();
-//!
-//!    // Initialize bly with window.
-//!    bly::init(&window);
-//!
-//!     // Run Application
-//!     event_loop.run(move |event, _, control_flow| {
-//!         control_flow.set_wait();
-//!         match event {
-//!             Event::WindowEvent {
-//!                 event: WindowEvent::CloseRequested,
-//!                 window_id,
-//!             } if window_id == window.id() => control_flow.set_exit(),
-//!             Event::MainEventsCleared => {
-//!             },
-//!             Event::RedrawEventsCleared => {
-//!                 // Fills the Window with the specified color
-//!                 bly::fill(bly::Color::Red);
-//!             }
-//!             _ => (),
-//!         }
-//!     });
-//! }
-//! ```
-
-pub mod iife;
-pub mod primitive;
 
 #[macro_use]
 extern crate log;
@@ -55,28 +9,33 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
+/// # Bly Drawing Context
+/// Used for actual drawing
 pub struct Bdc {
     pub(crate) backend: Box<dyn Backend>,
 }
 
-/// # Bly Drawing Context
 impl Bdc {
+    /// Requests Backend to process the start of drawing
     pub(crate) fn begin_draw(&mut self) {
         unsafe {
             self.backend.begin_draw();
         }
     }
 
+    /// Requests the backend to process the end of drawing
     pub(crate) fn flush(&mut self) {
         unsafe {
             self.backend.flush();
         }
     }
 
+    /// Get display size
     pub fn get_size(&mut self) -> (u32, u32) {
         unsafe { self.backend.get_display_size() }
     }
 
+    /// Fills the window background with the specified color
     pub fn clear(&mut self, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -85,19 +44,20 @@ impl Bdc {
         }
     }
 
-    pub fn draw_rect(
-        &mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    ) {
+    /// Draws a rectangle
+    pub fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, color: Color) {
         unsafe {
-            self.backend.draw_rect(x, y, width, height, r, g, b, a);
+            let vec: Vec4 = color.into();
+            self.backend.draw_rect(
+                x,
+                y,
+                width,
+                height,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
+            );
         }
     }
 }
@@ -122,7 +82,7 @@ pub struct Vec4(pub f64, pub f64, pub f64, pub f64);
 
 /// Enumeration of colors defined by default.
 /// Used to specify fill color, etc.
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Color {
     White,
     WhiteGray,
@@ -131,7 +91,7 @@ pub enum Color {
     Red,
     Green,
     Blue,
-    Rgba(u32, u32, u32, u32),
+    Rgba(f32, f32, f32, f32),
 }
 
 // Converts a Color enumerator to a vector.
@@ -152,7 +112,7 @@ impl Into<Vec4> for Color {
 
 /// Initialize bly
 pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
-    let mut backend = match handle.raw_window_handle() {
+    let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
         RawWindowHandle::AppKit(handle) => bly_corefoundation::create_backend(),
