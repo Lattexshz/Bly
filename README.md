@@ -1,11 +1,15 @@
 # Bly
 ## Rusty fast cross-platform 2D graphics library
 [![rust-clippy analyze](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml)
-
+![GitHub](https://img.shields.io/github/license/Lattexshz/Bly)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Lattexshz/Bly)
+![Lines of code](https://img.shields.io/tokei/lines/github/Lattexshz/Bly)
 # Functions to be implemented
 
  - [X] Window background fill
  - [X] Rectangle Drawing
+ - [ ] Line Drawing
+ - [ ] Triangle Drawing
 
 # Examples
 ```bash
