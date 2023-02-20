@@ -45,6 +45,7 @@
 //! }
 //! ```
 
+pub mod iife;
 pub mod primitive;
 
 #[macro_use]
@@ -60,7 +61,6 @@ pub struct Bdc {
 
 /// # Bly Drawing Context
 impl Bdc {
-
     pub(crate) fn begin_draw(&mut self) {
         unsafe {
             self.backend.begin_draw();
@@ -73,10 +73,8 @@ impl Bdc {
         }
     }
 
-    pub fn get_size(&mut self) -> (u32,u32) {
-        unsafe {
-            self.backend.get_display_size()
-        }
+    pub fn get_size(&mut self) -> (u32, u32) {
+        unsafe { self.backend.get_display_size() }
     }
 
     pub fn clear(&mut self, color: Color) {
@@ -87,20 +85,32 @@ impl Bdc {
         }
     }
 
-    pub fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
+    pub fn draw_rect(
+        &mut self,
+        x: f32,
+        y: f32,
+        width: f32,
+        height: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
         unsafe {
-            self.backend.draw_rect(x,y,width,height,r,g,b,a);
+            self.backend.draw_rect(x, y, width, height, r, g, b, a);
         }
     }
 }
 
 pub struct Bly {
-    pub(crate) bdc: Bdc
+    pub(crate) bdc: Bdc,
 }
 
 impl Bly {
-    pub fn draw<F>(&mut self,mut f: F) where
-        F: FnMut(&mut Bdc) {
+    pub fn draw<F>(&mut self, mut f: F)
+    where
+        F: FnMut(&mut Bdc),
+    {
         self.bdc.begin_draw();
         f(&mut self.bdc);
         self.bdc.flush();
@@ -145,9 +155,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     let mut backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
-        RawWindowHandle::AppKit(handle) => {
-            bly_corefoundation::create_backend()
-        },
+        RawWindowHandle::AppKit(handle) => bly_corefoundation::create_backend(),
         RawWindowHandle::Orbital(_) => return Err(()),
         #[cfg(target_os = "linux")]
         RawWindowHandle::Xlib(handle) => {
@@ -176,7 +184,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     info!("Successfully acquired backend");
     Ok(Bly {
         bdc: Bdc {
-            backend: Box::new(backend)
+            backend: Box::new(backend),
         },
     })
 }

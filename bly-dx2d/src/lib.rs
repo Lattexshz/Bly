@@ -4,54 +4,47 @@ use windows::{
     Win32::Graphics::Direct2D::*, Win32::UI::WindowsAndMessaging::*,
 };
 
+/// Create the backend from hwnd. This is the only method available to the public.
 pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
     let mut backend = Direct2DBackend::new(HWND(hwnd)).unwrap();
-    match backend.render() {
-        Ok(_) => {}
-        Err(_) => {
-            return Err(());
-        }
-    }
+
     Ok(backend)
 }
 
 pub struct Direct2DBackend {
     handle: HWND,
+
+    width: u32,
+    height: u32,
+
     factory: ID2D1Factory1,
-    style: ID2D1StrokeStyle,
-    target: Option<ID2D1HwndRenderTarget>,
-    brush1: Option<ID2D1SolidColorBrush>,
-    brush2: Option<ID2D1SolidColorBrush>,
+    target: ID2D1HwndRenderTarget,
 }
 
 impl Backend for Direct2DBackend {
     unsafe fn begin_draw(&mut self) {
-        let target = self.target.as_ref().unwrap();
-        target.BeginDraw();
+        self.update_target();
+        self.target.BeginDraw();
     }
 
     unsafe fn flush(&mut self) {
-        let target = self.target.as_ref().unwrap();
-        target
+        self.target
             .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
             .unwrap();
     }
 
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
-        let target = self.target.as_ref().unwrap();
         unsafe {
-            let size = target.GetSize();
+            let size = self.target.GetSize();
             (size.width as u32,size.height as u32)
         }
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        let target = self.target.as_ref().unwrap();
-        target.Clear(&D2D1_COLOR_F { r, g, b, a });
+        self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
     unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
-        let target = self.target.as_ref().unwrap();
         let color = D2D1_COLOR_F {
             r,
             g,
@@ -60,13 +53,13 @@ impl Backend for Direct2DBackend {
         };
 
         let properties = D2D1_BRUSH_PROPERTIES {
-            opacity: 0.8,
+            opacity: a,
             transform: Matrix3x2::identity(),
         };
 
 
-        let render_size = target.GetSize();
-        let brush1 = &target.CreateSolidColorBrush(&color, &properties).unwrap();
+        let render_size = self.target.GetSize();
+        let brush1 = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
 
         let rect1 = D2D_RECT_F {
             left:x,
@@ -75,87 +68,87 @@ impl Backend for Direct2DBackend {
             bottom:y+height
         };
 
-        target.FillRectangle(&rect1, brush1);
+        self.target.FillRectangle(&rect1, brush1);
     }
 }
 
+fn create_target(hwnd:HWND,factory:&ID2D1Factory1) -> (ID2D1HwndRenderTarget,u32,u32) {
+    let mut rect = RECT::default();
+
+    unsafe {
+        GetClientRect(hwnd, &mut rect);
+    }
+
+    let d2d_rect = D2D_SIZE_U {
+        width: (rect.right - rect.left) as u32,
+        height: (rect.bottom - rect.top) as u32,
+    };
+
+    let render_properties = D2D1_RENDER_TARGET_PROPERTIES::default();
+
+    let hwnd_render_properties = D2D1_HWND_RENDER_TARGET_PROPERTIES {
+        hwnd,
+        pixelSize: d2d_rect,
+        presentOptions: D2D1_PRESENT_OPTIONS_NONE,
+    };
+
+    let target = unsafe {
+        factory
+            .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties).unwrap()
+    };
+unsafe {
+&target.BeginDraw();
+&target.EndDraw(std::ptr::null_mut(), std::ptr::null_mut()).unwrap();
+}
+    (target,(rect.right - rect.left) as u32,(rect.bottom - rect.top) as u32)
+}
+
+
 impl Direct2DBackend {
+    /// Create a new backend
     fn new(hwnd: HWND) -> Result<Self> {
         let factory = create_factory()?;
-        let style = create_style(&factory)?;
+        let (target,width,height) = create_target(hwnd,&factory);
         Ok(Self {
             handle: hwnd,
+            width,
+            height,
             factory,
-            style,
-            target: None,
-            brush1: None,
-            brush2: None,
+            target,
         })
     }
 
-    pub fn render(&mut self) -> Result<()> {
-        if self.target.is_none() {
-            let hwnd = self.handle;
-            let mut rect = RECT::default();
+    /// Regenerate Target (to accommodate window resizing)
+    fn update_target(&mut self){
+        let mut rect = RECT::default();
 
-            unsafe {
-                GetClientRect(self.handle, &mut rect);
-            }
+        unsafe {
+            GetClientRect(self.handle, &mut rect);
+        }
 
-            let d2d_rect = D2D_SIZE_U {
-                width: (rect.right - rect.left) as u32,
-                height: (rect.bottom - rect.top) as u32,
-            };
+        let d2d_rect = D2D_SIZE_U {
+            width: (rect.right - rect.left) as u32,
+            height: (rect.bottom - rect.top) as u32,
+        };
+
+        // Re-create Target only when the window size changes
+        if self.width != d2d_rect.width || self.height != d2d_rect.height {
+            self.width = d2d_rect.width;
+            self.height = d2d_rect.height;
 
             let render_properties = D2D1_RENDER_TARGET_PROPERTIES::default();
 
             let hwnd_render_properties = D2D1_HWND_RENDER_TARGET_PROPERTIES {
-                hwnd,
+                hwnd:self.handle,
                 pixelSize: d2d_rect,
                 presentOptions: D2D1_PRESENT_OPTIONS_NONE,
             };
 
-            let gray = D2D1_COLOR_F {
-                r: 0.345,
-                g: 0.423,
-                b: 0.463,
-                a: 1.0,
-            };
-            let red = D2D1_COLOR_F {
-                r: 0.941,
-                g: 0.353,
-                b: 0.392,
-                a: 1.0,
-            };
-
-            let properties = D2D1_BRUSH_PROPERTIES {
-                opacity: 0.8,
-                transform: Matrix3x2::identity(),
-            };
-
-            let target = unsafe {
+            self.target = unsafe {
                 self.factory
-                    .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties)?
+                    .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties).unwrap()
             };
-            let brush1 = unsafe { target.CreateSolidColorBrush(&gray, &properties)? };
-            let brush2 = unsafe { target.CreateSolidColorBrush(&red, &properties)? };
-
-            self.target = Some(target);
-            self.brush1 = Some(brush1);
-            self.brush2 = Some(brush2);
         }
-
-        let target = self.target.as_ref().unwrap();
-        unsafe {
-            target.BeginDraw();
-            target.EndDraw(std::ptr::null_mut(), std::ptr::null_mut())?;
-        };
-
-        Ok(())
-    }
-
-    pub unsafe fn destroy(&mut self) {
-        self.render().unwrap();
     }
 }
 
