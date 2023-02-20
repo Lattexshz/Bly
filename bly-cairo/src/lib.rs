@@ -3,11 +3,7 @@
 mod util;
 
 use bly_ac::Backend;
-use cairo::ffi::{
-    cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_rectangle,
-    cairo_scale, cairo_set_source_rgb, cairo_surface_create_similar, cairo_surface_t, cairo_t,
-    cairo_xlib_surface_create,
-};
+use cairo::ffi::{cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_line_to, cairo_move_to, cairo_rectangle, cairo_scale, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_create_similar, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
 use cairo::Surface;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
@@ -78,7 +74,7 @@ impl Backend for CairoBackend {
     }
 
     unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
-        cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
+        cairo_set_source_rgba(self.cairo, r as c_double, g as c_double, b as c_double,a as c_double);
         cairo_rectangle(
             self.cairo,
             x as c_double,
@@ -87,6 +83,23 @@ impl Backend for CairoBackend {
             height as c_double,
         );
         cairo_fill(self.cairo);
+    }
+
+    unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
+        let (width,height) = util::get_xlib_window_size(self.display,self.handle);
+        let xc = width / 2;
+        let yc = height / 2;
+
+        cairo_set_line_width(self.cairo,10.0);
+
+        // draw red lines out from the center of the window
+        cairo_set_source_rgba(self.cairo, r as c_double, g as c_double, b as c_double,a as c_double);
+        cairo_move_to(self.cairo,0.0, 0.0);
+        cairo_line_to(self.cairo, xc as c_double, yc as c_double);
+        cairo_line_to(self.cairo, 0.0, height as c_double);
+        cairo_move_to(self.cairo, xc as c_double, yc as c_double);
+        cairo_line_to(self.cairo, width as c_double, yc as c_double);
+        cairo_stroke(self.cairo);
     }
 }
 
