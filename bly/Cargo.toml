@@ -11,16 +11,16 @@ raw-window-handle = "0.5.0"
 log = "0.4.17"
 env_logger = "0.10.0"
 
-bly-ac = { path = "../bly-ac" }
+bly-ac = { path = "../backends/bly-ac" }
 
 [target."cfg(windows)".dependencies]
-bly-dx2d = { path = "../bly-dx2d" }
+bly-dx2d = { path = "../backends/bly-dx2d" }
 
 [target."cfg(macos)".dependencies]
-bly-corefoundation = { path = "../bly-corefoundation" }
+bly-corefoundation = { path = "../backends/bly-corefoundation" }
 
 [target."cfg(unix)".dependencies]
-bly-cairo = { path = "../bly-cairo" }
+bly-cairo = { path = "../backends/bly-cairo" }
 
 [dev-dependencies]
 winit = "0.28.1"

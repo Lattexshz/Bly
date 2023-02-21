@@ -3,10 +3,10 @@ members = [
     "bly",
 
     # Backends
-    "bly-dx2d",
-    "bly-corefoundation",
-    "bly-cairo",
+    "backends/bly-dx2d",
+    "backends/bly-corefoundation",
+    "backends/bly-cairo",
 
     # Abstraction crate
-    "bly-ac"
+    "backends/bly-ac"
 ]
