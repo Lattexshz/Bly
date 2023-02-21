@@ -44,6 +44,13 @@ impl Bdc {
         }
     }
 
+    pub fn draw_ellipse(&mut self,x:f32,y:f32,radius_x:f32,radius_y:f32,color: Color) {
+        unsafe {
+            let vec: Vec4 = color.into();
+            self.backend.draw_ellipse(x, y, radius_x, radius_y, vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
+        }
+    }
+
     /// Draws a rectangle
     pub fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, color: Color) {
         unsafe {
@@ -115,13 +122,13 @@ pub enum Color {
 impl Into<Vec4> for Color {
     fn into(self) -> Vec4 {
         match self {
-            Color::White => Vec4(255.0, 255.0, 255.0, 0.0),
-            Color::WhiteGray => Vec4(0.9, 0.9, 0.9, 0.0),
-            Color::Gray => Vec4(0.9, 0.9, 0.9, 0.0),
+            Color::White => Vec4(255.0, 255.0, 255.0, 1.0),
+            Color::WhiteGray => Vec4(0.9, 0.9, 0.9, 1.0),
+            Color::Gray => Vec4(0.9, 0.9, 0.9, 1.0),
             Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
-            Color::Red => Vec4(255.0, 0.0, 0.0, 255.0),
-            Color::Green => Vec4(0.0, 255.0, 0.0, 255.0),
-            Color::Blue => Vec4(0.0, 0.0, 255.0, 255.0),
+            Color::Red => Vec4(1.0, 0.0, 0.0, 1.0),
+            Color::Green => Vec4(0.0, 1.0, 0.0, 1.0),
+            Color::Blue => Vec4(0.0, 0.0, 1.0, 1.0),
             Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
         }
     }
