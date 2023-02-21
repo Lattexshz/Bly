@@ -46,6 +46,31 @@ impl Backend for Direct2DBackend {
         self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
+    unsafe fn draw_ellipse(&mut self,x:f32,y:f32,radius_x:f32,radius_y:f32,r: f32, g: f32, b: f32, a:f32) {
+        let color = D2D1_COLOR_F {
+            r,
+            g,
+            b,
+            a,
+        };
+
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
+
+        let brush = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
+
+        self.target.FillEllipse(&mut D2D1_ELLIPSE {
+            point: D2D_POINT_2F {
+                x:x+radius_x,
+                y:y+radius_y,
+            },
+            radiusX: radius_x,
+            radiusY: radius_y,
+        }, brush);
+    }
+
     unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
         let color = D2D1_COLOR_F {
             r,
