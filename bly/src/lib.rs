@@ -145,11 +145,15 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
-                bly_cairo::create_backend(handle.window)
+                bly_cairo::create_xlib_backend(handle.window)
             }
         }
         RawWindowHandle::Xcb(_) => return Err(()),
-        RawWindowHandle::Wayland(_) => return Err(()),
+        #[cfg(target_os = "linux")]
+        RawWindowHandle::Wayland(handle) => {
+            info!("Platform: WayLand Drawing backend is Cairo");
+            bly_cairo::create_wayland_backend(handle.surface)
+        },
         RawWindowHandle::Drm(_) => return Err(()),
         RawWindowHandle::Gbm(_) => return Err(()),
         #[cfg(target_os = "windows")]
