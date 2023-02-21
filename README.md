@@ -1,5 +1,5 @@
 # Bly
-## Rusty fast cross-platform 2D graphics library
+## Rusty fast cross-platform 2D drawing library
 [![rust-clippy analyze](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml)
 ![GitHub](https://img.shields.io/github/license/Lattexshz/Bly)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Lattexshz/Bly)
@@ -8,8 +8,18 @@
 
  - [X] Window background fill
  - [X] Rectangle Drawing
- - [ ] Line Drawing
+ - [X] Line Drawing
+ - [ ] Ellipse Drawing
  - [ ] Triangle Drawing
+
+# Platforms Supported
+
+| Platform Name  | Availability |
+|----------------|--------------|
+| Windows (DX2D) | ✅            | 
+| MacOS          | ❌            | 
+| XLib           | ✅            |
+ | WayLand       |  ❌
 
 # Examples
 ```bash
