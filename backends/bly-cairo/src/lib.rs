@@ -2,8 +2,9 @@
 
 mod util;
 
+use std::f64::consts::PI;
 use bly_ac::Backend;
-use cairo::ffi::{cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_line_to, cairo_move_to, cairo_rectangle, cairo_scale, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_create_similar, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
+use cairo::ffi::{cairo_arc, cairo_create, cairo_destroy, cairo_fill, cairo_image_surface_create, cairo_line_to, cairo_move_to, cairo_rectangle, cairo_scale, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_create_similar, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
 use cairo::Surface;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
@@ -70,6 +71,20 @@ impl Backend for CairoBackend {
             width as c_double,
             height as c_double,
         );
+        cairo_fill(self.cairo);
+    }
+
+    unsafe fn draw_ellipse(&mut self, x: f32, y: f32, radius_x: f32, radius_y: f32, r: f32, g: f32, b: f32, a: f32) {
+        cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
+        cairo_rectangle(
+            self.cairo,
+            0 as c_double,
+            0 as c_double,
+            width as c_double,
+            height as c_double,
+        );
+        cairo_arc(self.cairo, x as c_double, y as c_double, 3.0, 0.0, 2.0 * PI);
+
         cairo_fill(self.cairo);
     }
 
