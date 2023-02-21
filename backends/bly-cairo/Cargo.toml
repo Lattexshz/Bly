@@ -12,5 +12,5 @@ wayland = [ ]
 [dependencies]
 bly-ac = { path = "../bly-ac" }
 
-cairo-rs = { version = "0.17.0", features = ["xlib"] }
+cairo-rs = { version = "0.17.0", features = ["xlib","freetype"] }
 x11 = "2.21.0"

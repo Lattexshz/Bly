@@ -1,14 +1,18 @@
 //! Cairo backend for Bly
 
-use std::ffi::c_ulong;
+use std::ffi::{c_ulong, c_void};
 use bly_ac::Backend;
 
 mod util;
 mod xlib;
 mod wayland;
 
-pub fn create_backend(window: c_ulong) -> CairoBackend {
+pub fn create_xlib_backend(window: c_ulong) -> CairoBackend {
     xlib::create_backend(window)
+}
+
+pub fn create_wayland_backend(surface: *mut c_void) -> CairoBackend {
+    wayland::create_backend(surface)
 }
 
 pub struct CairoBackend {
