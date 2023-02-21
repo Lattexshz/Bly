@@ -20,7 +20,7 @@ bly-dx2d = { path = "../backends/bly-dx2d" }
 bly-corefoundation = { path = "../backends/bly-corefoundation" }
 
 [target."cfg(unix)".dependencies]
-bly-cairo = { path = "../backends/bly-cairo" }
+bly-cairo = { path = "../backends/bly-cairo", features = ["xlib"] }
 
 [dev-dependencies]
 winit = "0.28.1"
