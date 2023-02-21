@@ -5,13 +5,13 @@ use crate::CairoBackend;
 pub(crate) fn create_backend(surface: *mut c_void) -> CairoBackend {
     unsafe {
         CairoBackend {
-            backend: Box::new(WayLandBackend{})
+            backend: Box::new(WayLandBackend{
+            })
         }
     }
 }
 
 pub struct WayLandBackend {
-
 }
 
 impl Backend for WayLandBackend {
