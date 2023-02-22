@@ -26,9 +26,9 @@ pub fn main() {
             } if window_id == window.id() => control_flow.set_exit(),
             Event::MainEventsCleared => {
                 bly.draw(|bdc| {
-                    let (width,height) = bdc.get_size();
+                    let (width, height) = bdc.get_size();
                     bdc.clear(bly::Color::White);
-                    bdc.draw_rect(50.0,50.0,50.0,50.0,bly::Color::Red);
+                    bdc.draw_rect(50.0, 50.0, 50.0, 50.0, bly::Color::Red);
                 });
             }
             _ => (),

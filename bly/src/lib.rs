@@ -48,7 +48,6 @@ impl Bdc {
         }
     }
 
-
     /// Draws an ellipse
     pub fn draw_ellipse(&mut self, x: f32, y: f32, radius_x: f32, radius_y: f32, color: Color) {
         unsafe {
