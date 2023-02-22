@@ -54,7 +54,7 @@ fn main() {
                 // bdc.draw_rect(180.0, 340.0, 150.0, 150.0, Color::Rgba(0.0, 1.0, 1.0, 1.0));
                 // bdc.draw_rect(340.0, 340.0, 150.0, 150.0, Color::Rgba(1.0, 0.0, 1.0, 1.0));
 
-                bdc.draw_line(10.0,50.0,500.0,300.0,1.0,Color::Black);
+                bdc.draw_line(10.0, 50.0, 500.0, 300.0, 1.0, Color::Black);
             }),
             _ => (),
         }

@@ -1,11 +1,11 @@
 //! Cairo backend for Bly
 
-use std::ffi::{c_ulong, c_void};
 use bly_ac::Backend;
+use std::ffi::{c_ulong, c_void};
 
 mod util;
-mod xlib;
 mod wayland;
+mod xlib;
 
 pub fn create_xlib_backend(window: c_ulong) -> CairoBackend {
     xlib::create_backend(window)
@@ -16,7 +16,7 @@ pub fn create_wayland_backend(surface: *mut c_void) -> CairoBackend {
 }
 
 pub struct CairoBackend {
-    backend: Box<dyn Backend>
+    backend: Box<dyn Backend>,
 }
 
 impl Backend for CairoBackend {
@@ -33,18 +33,50 @@ impl Backend for CairoBackend {
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.clear(r,g,b,a);
+        self.backend.clear(r, g, b, a);
     }
 
-    unsafe fn draw_ellipse(&mut self, x: f32, y: f32, radius_x: f32, radius_y: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_ellipse(x,y,radius_x,radius_y,r,g,b,a);
+    unsafe fn draw_ellipse(
+        &mut self,
+        x: f32,
+        y: f32,
+        radius_x: f32,
+        radius_y: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        self.backend
+            .draw_ellipse(x, y, radius_x, radius_y, r, g, b, a);
     }
 
-    unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_rect(x,y,width,height,r,g,b,a);
+    unsafe fn draw_rect(
+        &mut self,
+        x: f32,
+        y: f32,
+        width: f32,
+        height: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        self.backend.draw_rect(x, y, width, height, r, g, b, a);
     }
 
-    unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_line(x1,y1,x2,y2,stroke,r,g,b,a);
+    unsafe fn draw_line(
+        &mut self,
+        x1: f32,
+        y1: f32,
+        x2: f32,
+        y2: f32,
+        stroke: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        self.backend.draw_line(x1, y1, x2, y2, stroke, r, g, b, a);
     }
 }

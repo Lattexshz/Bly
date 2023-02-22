@@ -38,7 +38,7 @@ impl Backend for Direct2DBackend {
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
         unsafe {
             let size = self.target.GetSize();
-            (size.width as u32,size.height as u32)
+            (size.width as u32, size.height as u32)
         }
     }
 
@@ -46,70 +46,98 @@ impl Backend for Direct2DBackend {
         self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
-    unsafe fn draw_ellipse(&mut self,x:f32,y:f32,radius_x:f32,radius_y:f32,r: f32, g: f32, b: f32, a:f32) {
-        let color = D2D1_COLOR_F {
-            r,
-            g,
-            b,
-            a,
-        };
+    unsafe fn draw_ellipse(
+        &mut self,
+        x: f32,
+        y: f32,
+        radius_x: f32,
+        radius_y: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
             opacity: a,
             transform: Matrix3x2::identity(),
         };
 
-        let brush = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
+        let brush = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
-        self.target.FillEllipse(&mut D2D1_ELLIPSE {
-            point: D2D_POINT_2F {
-                x:x+radius_x,
-                y:y+radius_y,
+        self.target.FillEllipse(
+            &mut D2D1_ELLIPSE {
+                point: D2D_POINT_2F {
+                    x: x + radius_x,
+                    y: y + radius_y,
+                },
+                radiusX: radius_x,
+                radiusY: radius_y,
             },
-            radiusX: radius_x,
-            radiusY: radius_y,
-        }, brush);
+            brush,
+        );
     }
 
-    unsafe fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, r: f32, g: f32, b: f32, a: f32) {
-        let color = D2D1_COLOR_F {
-            r,
-            g,
-            b,
-            a,
-        };
+    unsafe fn draw_rect(
+        &mut self,
+        x: f32,
+        y: f32,
+        width: f32,
+        height: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
             opacity: a,
             transform: Matrix3x2::identity(),
         };
 
-        let brush1 = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
+        let brush1 = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
         let rect1 = D2D_RECT_F {
-            left:x,
-            right:x+width,
-            top:y,
-            bottom:y+height
+            left: x,
+            right: x + width,
+            top: y,
+            bottom: y + height,
         };
 
         self.target.FillRectangle(&rect1, brush1);
     }
 
-    unsafe fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
-        let color = D2D1_COLOR_F {
-            r,
-            g,
-            b,
-            a,
-        };
+    unsafe fn draw_line(
+        &mut self,
+        x1: f32,
+        y1: f32,
+        x2: f32,
+        y2: f32,
+        stroke: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
             opacity: a,
             transform: Matrix3x2::identity(),
         };
 
-        let brush1 = &self.target.CreateSolidColorBrush(&color, &properties).unwrap();
+        let brush1 = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
         let props = D2D1_STROKE_STYLE_PROPERTIES {
             startCap: D2D1_CAP_STYLE_ROUND,
@@ -119,17 +147,17 @@ impl Backend for Direct2DBackend {
 
         let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
 
-        self.target.DrawLine(D2D_POINT_2F {
-            x:x1,
-            y:y1,
-        }, D2D_POINT_2F {
-            x: x2,
-            y: y2,
-        }, brush1, stroke, style);
+        self.target.DrawLine(
+            D2D_POINT_2F { x: x1, y: y1 },
+            D2D_POINT_2F { x: x2, y: y2 },
+            brush1,
+            stroke,
+            style,
+        );
     }
 }
 
-fn create_target(hwnd:HWND,factory:&ID2D1Factory1) -> (ID2D1HwndRenderTarget,u32,u32) {
+fn create_target(hwnd: HWND, factory: &ID2D1Factory1) -> (ID2D1HwndRenderTarget, u32, u32) {
     let mut rect = RECT::default();
 
     unsafe {
@@ -151,17 +179,21 @@ fn create_target(hwnd:HWND,factory:&ID2D1Factory1) -> (ID2D1HwndRenderTarget,u32
 
     let target = unsafe {
         factory
-            .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties).unwrap()
+            .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties)
+            .unwrap()
     };
-    (target,(rect.right - rect.left) as u32,(rect.bottom - rect.top) as u32)
+    (
+        target,
+        (rect.right - rect.left) as u32,
+        (rect.bottom - rect.top) as u32,
+    )
 }
-
 
 impl Direct2DBackend {
     /// Create a new backend
     fn new(hwnd: HWND) -> Result<Self> {
         let factory = create_factory()?;
-        let (target,width,height) = create_target(hwnd,&factory);
+        let (target, width, height) = create_target(hwnd, &factory);
         Ok(Self {
             handle: hwnd,
             width,
@@ -172,7 +204,7 @@ impl Direct2DBackend {
     }
 
     /// Regenerate Target (to accommodate window resizing)
-    fn update_target(&mut self){
+    fn update_target(&mut self) {
         let mut rect = RECT::default();
 
         unsafe {
@@ -192,14 +224,15 @@ impl Direct2DBackend {
             let render_properties = D2D1_RENDER_TARGET_PROPERTIES::default();
 
             let hwnd_render_properties = D2D1_HWND_RENDER_TARGET_PROPERTIES {
-                hwnd:self.handle,
+                hwnd: self.handle,
                 pixelSize: d2d_rect,
                 presentOptions: D2D1_PRESENT_OPTIONS_NONE,
             };
 
             self.target = unsafe {
                 self.factory
-                    .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties).unwrap()
+                    .CreateHwndRenderTarget(&render_properties, &hwnd_render_properties)
+                    .unwrap()
             };
         }
     }
