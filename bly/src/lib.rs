@@ -9,14 +9,16 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-/// # Bly Drawing Context
-/// Used for actual drawing
+/// # Bly Drawing Context - Wrapper for Backend
+/// Used for actual drawing  
 pub struct Bdc {
     pub(crate) backend: Box<dyn Backend>,
 }
 
 impl Bdc {
     /// Requests Backend to process the start of drawing
+    /// This method is called internally in Bly::draw(). Therefore,  
+    /// it is not possible for the library user to call this method.
     pub(crate) fn begin_draw(&mut self) {
         unsafe {
             self.backend.begin_draw();
@@ -24,6 +26,8 @@ impl Bdc {
     }
 
     /// Requests the backend to process the end of drawing
+    /// This method is called internally in Bly::draw(). Therefore,   
+    /// it is not possible for the library user to call this method.
     pub(crate) fn flush(&mut self) {
         unsafe {
             self.backend.flush();
@@ -44,6 +48,8 @@ impl Bdc {
         }
     }
 
+
+    /// Draws an ellipse
     pub fn draw_ellipse(&mut self, x: f32, y: f32, radius_x: f32, radius_y: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -77,6 +83,7 @@ impl Bdc {
         }
     }
 
+    /// Draws a line
     pub fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -100,6 +107,7 @@ pub struct Bly {
 }
 
 impl Bly {
+    /// drawing via bdc.
     pub fn draw<F>(&mut self, mut f: F)
     where
         F: FnMut(&mut Bdc),
@@ -143,7 +151,8 @@ impl Into<Vec4> for Color {
     }
 }
 
-/// Initialize bly
+/// Initialize bly  
+/// If Backend is not supported or some error occurs during initialization, Err is returned.
 pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
