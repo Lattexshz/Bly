@@ -87,9 +87,9 @@ impl Backend for XLibBackend {
         b: f32,
         a: f32,
     ) {
-        cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);
+        cairo_set_source_rgba(self.cairo, r as c_double, g as c_double, b as c_double, a as c_double);
 
-        cairo_arc(self.cairo, x as c_double, y as c_double, 3.0, 0.0, 2.0 * PI);
+        cairo_arc(self.cairo, (x+radius_x) as c_double, (y+radius_x) as c_double, radius_x as c_double, 0.0, 2.0 * PI);
 
         cairo_fill(self.cairo);
     }
