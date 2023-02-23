@@ -1,3 +1,6 @@
+//! Crate for common back-end processing and other variables.
+
+/// Trait for common back-end processing
 pub trait Backend {
     // Initialize
     /// Processing to start drawing (initialization, etc.)
@@ -12,6 +15,7 @@ pub trait Backend {
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
 
     // Primitives
+    /// Draws a ellipse
     unsafe fn draw_ellipse(
         &mut self,
         x: f32,
@@ -37,6 +41,7 @@ pub trait Backend {
         a: f32,
     );
 
+    // Draws a line
     unsafe fn draw_line(
         &mut self,
         x1: f32,

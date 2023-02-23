@@ -19,32 +19,46 @@ impl Backend for CoreFoundationBackend {
         todo!()
     }
 
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {}
+    unsafe fn clear(&mut self, _r: f32, _g: f32, _b: f32, _a: f32) {}
+
+    unsafe fn draw_ellipse(
+        &mut self,
+        _x: f32,
+        _y: f32,
+        _radius_x: f32,
+        _radius_y: f32,
+        _r: f32,
+        _g: f32,
+        _b: f32,
+        _a: f32,
+    ) {
+        todo!()
+    }
 
     unsafe fn draw_rect(
         &mut self,
-        left: f32,
-        top: f32,
-        right: f32,
-        bottom: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        _left: f32,
+        _top: f32,
+        _right: f32,
+        _bottom: f32,
+        _r: f32,
+        _g: f32,
+        _b: f32,
+        _a: f32,
     ) {
     }
 
     unsafe fn draw_line(
         &mut self,
-        x1: f32,
-        y1: f32,
-        x2: f32,
-        y2: f32,
-        stroke: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        _x1: f32,
+        _y1: f32,
+        _x2: f32,
+        _y2: f32,
+        _stroke: f32,
+        _r: f32,
+        _g: f32,
+        _b: f32,
+        _a: f32,
     ) {
         todo!()
     }
