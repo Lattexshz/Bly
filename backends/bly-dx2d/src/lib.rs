@@ -121,8 +121,7 @@ impl Backend for Direct2DBackend {
         y: f32,
         width: f32,
         height: f32,
-        radius_x:f32,
-        radius_y:f32,
+        radius:f32,
         r: f32,
         g: f32,
         b: f32,
@@ -150,8 +149,8 @@ impl Backend for Direct2DBackend {
 
         let rounded_rect = D2D1_ROUNDED_RECT {
             rect,
-            radiusX:radius_x,
-            radiusY:radius_y
+            radiusX:radius,
+            radiusY:radius
         };
 
         self.target.FillRoundedRectangle(&rounded_rect,brush);

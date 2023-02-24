@@ -87,12 +87,11 @@ impl Bdc {
         y: f32,
         width: f32,
         height: f32,
-        radius_x:f32,
-        radius_y:f32,
+        radius:f32,
         color: Color) {
             let vec:Vec4 = color.into();
             unsafe {
-                self.backend.draw_rounded_rect(x,y,width,height,radius_x,radius_y,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
+                self.backend.draw_rounded_rect(x,y,width,height,radius,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
             }
         }
 

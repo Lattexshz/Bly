@@ -137,8 +137,7 @@ impl Backend for XLibBackend {
         y: f32,
         width: f32,
         height: f32,
-        radius_x:f32,
-        radius_y:f32,
+        radius:f32,
         r: f32,
         g: f32,
         b: f32,
@@ -155,10 +154,10 @@ impl Backend for XLibBackend {
         let degrees:f32 = (PI / 180.0) as f32;
 
         cairo_new_sub_path (self.cairo);
-        cairo_arc (self.cairo, (x + width - radius_x) as c_double, (y + radius_x) as c_double, radius_x as c_double, (-90.0 * degrees) as c_double, (0.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (x + width - radius_x) as c_double, (y + height - radius_x) as c_double, radius_x as c_double, 0 * degrees, (90.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (x + radius_x) as c_double, (y + height - radius_x) as c_double, radius_x as c_double, (90.0 * degrees) as c_double, (180.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (x + radius_x) as c_double, (y + radius_x) as c_double, radius_x as c_double, (180.0 * degrees) as c_double, (270.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + width - radius) as c_double, (y + radius) as c_double, radius as c_double, (-90.0 * degrees) as c_double, (0.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + width - radius) as c_double, (y + height - radius) as c_double, radius as c_double, (0.0 * degrees) as c_double, (90.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + radius) as c_double, (y + height - radius) as c_double, radius as c_double, (90.0 * degrees) as c_double, (180.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + radius) as c_double, (y + radius) as c_double, radius as c_double, (180.0 * degrees) as c_double, (270.0 * degrees) as c_double);
         cairo_close_path (self.cairo);
         cairo_fill_preserve(self.cairo);
     }

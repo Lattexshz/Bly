@@ -57,6 +57,10 @@ impl Backend for WayLandBackend {
         todo!()
     }
 
+    unsafe fn draw_rounded_rect(&mut self, x: f32, y: f32, width: f32, height: f32, radius_x: f32, radius_y: f32, r: f32, g: f32, b: f32, a: f32) {
+        todo!()
+    }
+
     unsafe fn draw_line(
         &mut self,
         x1: f32,
