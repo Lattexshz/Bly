@@ -115,6 +115,47 @@ impl Backend for Direct2DBackend {
         self.target.FillRectangle(&rect1, brush1);
     }
 
+    unsafe fn draw_rounded_rect(
+        &mut self,
+        x: f32,
+        y: f32,
+        width: f32,
+        height: f32,
+        radius:f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+
+        let color = D2D1_COLOR_F { r, g, b, a };
+
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
+
+        let brush = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
+
+        let rect = D2D_RECT_F {
+            left: x,
+            right: x + width,
+            top: y,
+            bottom: y + height,
+        };
+
+        let rounded_rect = D2D1_ROUNDED_RECT {
+            rect,
+            radiusX:radius,
+            radiusY:radius
+        };
+
+        self.target.FillRoundedRectangle(&rounded_rect,brush);
+    }
+
     unsafe fn draw_line(
         &mut self,
         x1: f32,

@@ -65,6 +65,10 @@ impl Backend for CairoBackend {
         self.backend.draw_rect(x, y, width, height, r, g, b, a);
     }
 
+    unsafe fn draw_rounded_rect(&mut self, x: f32, y: f32, width: f32, height: f32, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.draw_rounded_rect(x,y,width,height,radius,r,g,b,a);
+    }
+
     unsafe fn draw_line(
         &mut self,
         x1: f32,
