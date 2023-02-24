@@ -50,8 +50,7 @@ impl Backend for Direct2DBackend {
         &mut self,
         x: f32,
         y: f32,
-        radius_x: f32,
-        radius_y: f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
@@ -72,11 +71,11 @@ impl Backend for Direct2DBackend {
         self.target.FillEllipse(
             &mut D2D1_ELLIPSE {
                 point: D2D_POINT_2F {
-                    x: x + radius_x,
-                    y: y + radius_y,
+                    x: x + radius,
+                    y: y + radius,
                 },
-                radiusX: radius_x,
-                radiusY: radius_y,
+                radiusX: radius,
+                radiusY: radius,
             },
             brush,
         );

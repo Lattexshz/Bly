@@ -49,14 +49,13 @@ impl Bdc {
     }
 
     /// Draws an ellipse
-    pub fn draw_ellipse(&mut self, x: f32, y: f32, radius_x: f32, radius_y: f32, color: Color) {
+    pub fn draw_ellipse(&mut self, x: f32, y: f32, radius: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_ellipse(
                 x,
                 y,
-                radius_x,
-                radius_y,
+                radius,
                 vec.0 as f32,
                 vec.1 as f32,
                 vec.2 as f32,

@@ -40,15 +40,14 @@ impl Backend for CairoBackend {
         &mut self,
         x: f32,
         y: f32,
-        radius_x: f32,
-        radius_y: f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
         a: f32,
     ) {
         self.backend
-            .draw_ellipse(x, y, radius_x, radius_y, r, g, b, a);
+            .draw_ellipse(x, y, radius, r, g, b, a);
     }
 
     unsafe fn draw_rect(
