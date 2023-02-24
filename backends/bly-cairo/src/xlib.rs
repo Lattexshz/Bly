@@ -1,10 +1,6 @@
 use crate::{util, CairoBackend};
 use bly_ac::Backend;
-use cairo_sys::{
-    cairo_arc, cairo_create, cairo_destroy, cairo_fill, cairo_line_to, cairo_move_to,
-    cairo_rectangle, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba,
-    cairo_stroke, cairo_surface_t, cairo_t, cairo_xlib_surface_create,
-};
+use cairo_sys::{cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve, cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
 use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
@@ -133,6 +129,38 @@ impl Backend for XLibBackend {
             height as c_double,
         );
         cairo_fill(self.cairo);
+    }
+
+    unsafe fn draw_rounded_rect(
+        &mut self,
+        x: f32,
+        y: f32,
+        width: f32,
+        height: f32,
+        radius_x:f32,
+        radius_y:f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        cairo_set_source_rgba(
+            self.cairo,
+            r as c_double,
+            g as c_double,
+            b as c_double,
+            a as c_double,
+        );
+
+        let degrees:f32 = (PI / 180.0) as f32;
+
+        cairo_new_sub_path (self.cairo);
+        cairo_arc (self.cairo, (x + width - radius_x) as c_double, (y + radius_x) as c_double, radius_x as c_double, (-90.0 * degrees) as c_double, (0.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + width - radius_x) as c_double, (y + height - radius_x) as c_double, radius_x as c_double, 0 * degrees, (90.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + radius_x) as c_double, (y + height - radius_x) as c_double, radius_x as c_double, (90.0 * degrees) as c_double, (180.0 * degrees) as c_double);
+        cairo_arc (self.cairo, (x + radius_x) as c_double, (y + radius_x) as c_double, radius_x as c_double, (180.0 * degrees) as c_double, (270.0 * degrees) as c_double);
+        cairo_close_path (self.cairo);
+        cairo_fill_preserve(self.cairo);
     }
 
     unsafe fn draw_line(
