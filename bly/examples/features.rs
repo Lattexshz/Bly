@@ -30,6 +30,7 @@ fn main() {
                     let (width, height) = bdc.get_size();
                     bdc.draw_rect(10.0, 10.0, 100.0, 100.0, Color::Red);
                     bdc.draw_rounded_rect(120.0, 10.0, 100.0, 100.0,10.0,Color::Red);
+                    bdc.draw_ellipse(230.0,10.0,50.0,20.0,Color::Red);
                 });
             }
             _ => (),
