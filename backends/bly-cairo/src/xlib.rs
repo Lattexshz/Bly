@@ -76,8 +76,7 @@ impl Backend for XLibBackend {
         &mut self,
         x: f32,
         y: f32,
-        radius_x: f32,
-        radius_y: f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
@@ -93,9 +92,9 @@ impl Backend for XLibBackend {
 
         cairo_arc(
             self.cairo,
-            (x + radius_x) as c_double,
-            (y + radius_x) as c_double,
-            radius_x as c_double,
+            (x + radius) as c_double,
+            (y + radius) as c_double,
+            radius as c_double,
             0.0,
             2.0 * PI,
         );
