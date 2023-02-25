@@ -40,7 +40,7 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_ellipse(point,radius,r,g,b,a);
+        self.backend.draw_ellipse(point, radius, r, g, b, a);
     }
 
     unsafe fn draw_rect(
@@ -52,20 +52,21 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_rect(point1,point2,r,g,b,a);
+        self.backend.draw_rect(point1, point2, r, g, b, a);
     }
 
     unsafe fn draw_rounded_rect(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        radius:f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_rounded_rect(point1,point2,radius,r,g,b,a);
+        self.backend
+            .draw_rounded_rect(point1, point2, radius, r, g, b, a);
     }
 
     unsafe fn draw_line(
@@ -78,6 +79,6 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_line(point1,point2,stroke,r,g,b,a);
+        self.backend.draw_line(point1, point2, stroke, r, g, b, a);
     }
 }

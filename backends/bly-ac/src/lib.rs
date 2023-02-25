@@ -42,7 +42,7 @@ pub trait Backend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        radius:f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
@@ -63,37 +63,30 @@ pub trait Backend {
 }
 
 /// Represents two points in two dimensions
-pub struct Point2<T>(pub T,pub T);
+pub struct Point2<T>(pub T, pub T);
 impl<T> Point2<T> {
-    pub fn new(a:T,b:T) -> Self {
-        Self {
-            0: a,
-            1: b,
-        }
+    pub fn new(a: T, b: T) -> Self {
+        Self { 0: a, 1: b }
     }
 }
 
 /// Represents three points in two dimensions
-pub struct Point3<T>(pub T,pub T,pub T);
+pub struct Point3<T>(pub T, pub T, pub T);
 impl<T> Point3<T> {
-    pub fn new(a:T,b:T,c:T) -> Self {
-        Self {
-            0: a,
-            1: b,
-            2: c,
-        }
+    pub fn new(a: T, b: T, c: T) -> Self {
+        Self { 0: a, 1: b, 2: c }
     }
 }
 
 /// Represents four points in two dimensions
-pub struct Point4<T>(pub T,pub T,pub T,pub T);
+pub struct Point4<T>(pub T, pub T, pub T, pub T);
 impl<T> Point4<T> {
-    pub fn new(a:T,b:T,c:T,d:T) -> Self {
+    pub fn new(a: T, b: T, c: T, d: T) -> Self {
         Self {
             0: a,
             1: b,
             2: c,
-            3: d
+            3: d,
         }
     }
 }

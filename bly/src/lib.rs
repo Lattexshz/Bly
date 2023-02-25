@@ -51,7 +51,7 @@ impl Painter {
     }
 
     /// Draws an ellipse
-    pub fn draw_ellipse(&mut self, pos:Point2<f32>, radius: f32, color: Color) {
+    pub fn draw_ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_ellipse(
@@ -66,12 +66,12 @@ impl Painter {
     }
 
     /// Draws a rectangle
-    pub fn draw_rect(&mut self, pos:Point2<f32>,
-                     size:Point2<f32>, color: Color) {
+    pub fn draw_rect(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_rect(
-                pos,size,
+                pos,
+                size,
                 vec.0 as f32,
                 vec.1 as f32,
                 vec.2 as f32,
@@ -80,19 +80,36 @@ impl Painter {
         }
     }
 
-    pub fn draw_rounded_rect(&mut self,
-        pos:Point2<f32>,
-        size:Point2<f32>,
-        radius:f32,
-        color: Color) {
-            let vec:Vec4 = color.into();
-            unsafe {
-                self.backend.draw_rounded_rect(pos,size,radius,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
-            }
+    pub fn draw_rounded_rect(
+        &mut self,
+        pos: Point2<f32>,
+        size: Point2<f32>,
+        radius: f32,
+        color: Color,
+    ) {
+        let vec: Vec4 = color.into();
+        unsafe {
+            self.backend.draw_rounded_rect(
+                pos,
+                size,
+                radius,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
+            );
         }
+    }
 
     /// Draws a line
-    pub fn draw_line(&mut self, x1: f32, point1:Point2<f32>,point2:Point2<f32>, stroke: f32, color: Color) {
+    pub fn draw_line(
+        &mut self,
+        _x1: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        stroke: f32,
+        color: Color,
+    ) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_line(
