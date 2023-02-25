@@ -15,6 +15,16 @@ raw-window-handle = "0.5.0"
 log = "0.4.17"
 env_logger = "0.10.0"
 
+web_sys = { version = "0.3.22", package = "web-sys",features = [
+    "console",
+    'CanvasRenderingContext2d',
+    'Document',
+    'Element',
+    'HtmlCanvasElement',
+    'HtmlBodyElement',
+    'Window',
+] }
+
 [target."cfg(windows)".dependencies]
 windows = {version = "0.38.0", features = [
     "Foundation_Numerics",
@@ -43,10 +53,9 @@ serde = { version = "1", features = ["serde_derive"] }
 raw-window-handle = "0.5.0"
 bitflags = "1"
 mint = { version = "0.5.6" }
-[target.'cfg(target_arch = "wasm32")'.dependencies.web_sys]
-package = "web-sys"
-version = "0.3.22"
-features = [
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web_sys = { version = "0.3.22", package = "web-sys",features = [
     'console',
     "AddEventListenerOptions",
     'CssStyleDeclaration',
@@ -67,7 +76,7 @@ features = [
     'PointerEvent',
     'Window',
     'WheelEvent'
-]
+] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies.wasm-bindgen]
 version = "0.2.45"

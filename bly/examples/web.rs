@@ -1,10 +1,12 @@
 #![allow(clippy::single_match)]
 
+use std::env;
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::WindowBuilder,
 };
+use bly::{Canvas, Color, Point2};
 
 pub fn main() {
     let event_loop = EventLoop::new();
@@ -14,15 +16,21 @@ pub fn main() {
         .build(&event_loop)
         .unwrap();
 
+    // #[cfg(target_arch = "wasm32")]
+    //     wasm::create_log_list(&window);
+
+    let mut canvas = match bly::create_canvas(&window) {
+        Ok(c) => c,
+        Err(_) => {
+            panic!("")
+        }
+    };
+
     #[cfg(target_arch = "wasm32")]
-        let log_list = wasm::create_log_list(&window);
+    wasm::draw(canvas);
 
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_wait();
-
-        #[cfg(target_arch = "wasm32")]
-        wasm::log_event(&log_list, &event);
-
         match event {
             Event::WindowEvent {
                 event: WindowEvent::CloseRequested,
@@ -40,6 +48,7 @@ pub fn main() {
 mod wasm {
     use wasm_bindgen::prelude::*;
     use winit::{event::Event, window::Window};
+    use bly::{Canvas,Color};
 
     #[wasm_bindgen(start)]
     pub fn run() {
@@ -49,7 +58,13 @@ mod wasm {
         super::main();
     }
 
-    pub fn create_log_list(window: &Window) -> web_sys::Element {
+    pub fn draw(mut canvas: Canvas) {
+        canvas.draw(|painter| {
+            painter.clear(Color::Red);
+        });
+    }
+
+    pub fn create_log_list(window: &Window) {
         use winit::platform::web::WindowExtWebSys;
 
         let canvas = window.canvas();
@@ -59,7 +74,7 @@ mod wasm {
         let body = document.body().unwrap();
 
         // Set a background color for the canvas to make it easier to tell the where the canvas is for debugging purposes.
-        canvas.style().set_css_text("background-color: crimson;");
+        canvas.style().set_css_text("background-color: blue;");
         body.append_child(&canvas).unwrap();
 
         let log_header = document.create_element("h2").unwrap();
@@ -68,11 +83,9 @@ mod wasm {
 
         let log_list = document.create_element("ul").unwrap();
         body.append_child(&log_list).unwrap();
-        log_list
     }
 
     pub fn log_event(log_list: &web_sys::Element, event: &Event<()>) {
-        log::debug!("{:?}", event);
 
         // Getting access to browser logs requires a lot of setup on mobile devices.
         // So we implement this basic logging system into the page to give developers an easy alternative.

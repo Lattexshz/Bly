@@ -14,6 +14,7 @@ mod dx2d;
 #[cfg(target_os="linux")]
 mod cairo;
 mod ac;
+#[cfg(target_arch = "wasm32")]
 mod web;
 
 pub type Point2<T> = ac::Point2<T>;
@@ -186,7 +187,7 @@ impl Into<Vec4> for Color {
 /// Initialize bly  
 /// If Backend is not supported or some error occurs during initialization, Err is returned.
 pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
-    let backend = match handle.raw_window_handle() {
+    let mut backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
         RawWindowHandle::AppKit(handle) => return Err(()),
@@ -211,6 +212,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
             }
         }
         RawWindowHandle::WinRt(_) => return Err(()),
+        #[cfg(target_arch="wasm32")]
         RawWindowHandle::Web(handle) => {
             info!("Platform: Web Drawing backend is web-sys");
             web::create_backend(handle.id)
@@ -220,6 +222,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         _ => return Err(()),
     };
     info!("Successfully acquired backend");
+
     Ok(Canvas {
         painter: Painter {
             backend: Box::new(backend),
