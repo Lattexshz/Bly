@@ -9,6 +9,7 @@ use cairo_sys::{
 use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
+use crate::cairo::{CairoBackend, util};
 
 pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     unsafe {
