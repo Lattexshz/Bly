@@ -11,7 +11,7 @@ use crate::ac::Backend;
 
 #[cfg(target_os="windows")]
 mod dx2d;
-#[cfg(target_os="unix")]
+#[cfg(target_os="linux")]
 mod cairo;
 mod ac;
 
