@@ -115,13 +115,12 @@ impl Backend for Direct2DBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        radius:f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
         a: f32,
     ) {
-
         let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
@@ -143,11 +142,11 @@ impl Backend for Direct2DBackend {
 
         let rounded_rect = D2D1_ROUNDED_RECT {
             rect,
-            radiusX:radius,
-            radiusY:radius
+            radiusX: radius,
+            radiusY: radius,
         };
 
-        self.target.FillRoundedRectangle(&rounded_rect,brush);
+        self.target.FillRoundedRectangle(&rounded_rect, brush);
     }
 
     unsafe fn draw_line(
@@ -181,8 +180,14 @@ impl Backend for Direct2DBackend {
         let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
 
         self.target.DrawLine(
-            D2D_POINT_2F { x: point1.0, y: point1.1 },
-            D2D_POINT_2F { x: point2.0, y: point2.1 },
+            D2D_POINT_2F {
+                x: point1.0,
+                y: point1.1,
+            },
+            D2D_POINT_2F {
+                x: point2.0,
+                y: point2.1,
+            },
             brush1,
             stroke,
             style,

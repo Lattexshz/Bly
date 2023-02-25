@@ -13,11 +13,11 @@ pub type Point2<T> = bly_ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
-pub struct Bdc {
+pub struct Painter {
     pub(crate) backend: Box<dyn Backend>,
 }
 
-impl Bdc {
+impl Painter {
     /// Requests Backend to process the start of drawing
     /// This method is called internally in Bly::draw(). Therefore,  
     /// it is not possible for the library user to call this method.
@@ -51,7 +51,7 @@ impl Bdc {
     }
 
     /// Draws an ellipse
-    pub fn draw_ellipse(&mut self, pos:Point2<f32>, radius: f32, color: Color) {
+    pub fn draw_ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_ellipse(
@@ -66,12 +66,12 @@ impl Bdc {
     }
 
     /// Draws a rectangle
-    pub fn draw_rect(&mut self, pos:Point2<f32>,
-                     size:Point2<f32>, color: Color) {
+    pub fn draw_rect(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_rect(
-                pos,size,
+                pos,
+                size,
                 vec.0 as f32,
                 vec.1 as f32,
                 vec.2 as f32,
@@ -80,19 +80,36 @@ impl Bdc {
         }
     }
 
-    pub fn draw_rounded_rect(&mut self,
-        pos:Point2<f32>,
-        size:Point2<f32>,
-        radius:f32,
-        color: Color) {
-            let vec:Vec4 = color.into();
-            unsafe {
-                self.backend.draw_rounded_rect(pos,size,radius,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
-            }
+    pub fn draw_rounded_rect(
+        &mut self,
+        pos: Point2<f32>,
+        size: Point2<f32>,
+        radius: f32,
+        color: Color,
+    ) {
+        let vec: Vec4 = color.into();
+        unsafe {
+            self.backend.draw_rounded_rect(
+                pos,
+                size,
+                radius,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
+            );
         }
+    }
 
     /// Draws a line
-    pub fn draw_line(&mut self, x1: f32, point1:Point2<f32>,point2:Point2<f32>, stroke: f32, color: Color) {
+    pub fn draw_line(
+        &mut self,
+        _x1: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        stroke: f32,
+        color: Color,
+    ) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_line(
@@ -108,19 +125,21 @@ impl Bdc {
     }
 }
 
-pub struct Bly {
-    pub(crate) bdc: Bdc,
+/// An interface to make Painter easier to use
+/// (in fact, it is also a structure that hides Painter's behavior to some extent)
+pub struct Canvas {
+    pub(crate) painter: Painter,
 }
 
-impl Bly {
+impl Canvas {
     /// drawing via bdc.
     pub fn draw<F>(&mut self, mut f: F)
     where
-        F: FnMut(&mut Bdc),
+        F: FnMut(&mut Painter),
     {
-        self.bdc.begin_draw();
-        f(&mut self.bdc);
-        self.bdc.flush();
+        self.painter.begin_draw();
+        f(&mut self.painter);
+        self.painter.flush();
     }
 }
 /// Mainly used to store vertex information
@@ -159,7 +178,7 @@ impl Into<Vec4> for Color {
 
 /// Initialize bly  
 /// If Backend is not supported or some error occurs during initialization, Err is returned.
-pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
+pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
@@ -191,8 +210,8 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
         _ => return Err(()),
     };
     info!("Successfully acquired backend");
-    Ok(Bly {
-        bdc: Bdc {
+    Ok(Canvas {
+        painter: Painter {
             backend: Box::new(backend),
         },
     })
