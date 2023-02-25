@@ -48,8 +48,7 @@ impl Backend for Direct2DBackend {
 
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,
@@ -71,8 +70,8 @@ impl Backend for Direct2DBackend {
         self.target.FillEllipse(
             &mut D2D1_ELLIPSE {
                 point: D2D_POINT_2F {
-                    x: x + radius,
-                    y: y + radius,
+                    x: point.0 + radius,
+                    y: point.1 + radius,
                 },
                 radiusX: radius,
                 radiusY: radius,
@@ -83,10 +82,8 @@ impl Backend for Direct2DBackend {
 
     unsafe fn draw_rect(
         &mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         r: f32,
         g: f32,
         b: f32,
@@ -99,27 +96,25 @@ impl Backend for Direct2DBackend {
             transform: Matrix3x2::identity(),
         };
 
-        let brush1 = &self
+        let brush = &self
             .target
             .CreateSolidColorBrush(&color, &properties)
             .unwrap();
 
-        let rect1 = D2D_RECT_F {
-            left: x,
-            right: x + width,
-            top: y,
-            bottom: y + height,
+        let rect = D2D_RECT_F {
+            left: point1.0,
+            right: point1.0 + point2.0,
+            top: point1.1,
+            bottom: point1.1 + point2.1,
         };
 
-        self.target.FillRectangle(&rect1, brush1);
+        self.target.FillRectangle(&rect, brush);
     }
 
     unsafe fn draw_rounded_rect(
         &mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         radius:f32,
         r: f32,
         g: f32,
@@ -140,10 +135,10 @@ impl Backend for Direct2DBackend {
             .unwrap();
 
         let rect = D2D_RECT_F {
-            left: x,
-            right: x + width,
-            top: y,
-            bottom: y + height,
+            left: point1.0,
+            right: point1.0 + point2.0,
+            top: point1.1,
+            bottom: point1.1 + point2.1,
         };
 
         let rounded_rect = D2D1_ROUNDED_RECT {

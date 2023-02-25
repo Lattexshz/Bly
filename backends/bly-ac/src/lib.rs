@@ -18,8 +18,7 @@ pub trait Backend {
     /// Draws a ellipse
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,
@@ -30,10 +29,8 @@ pub trait Backend {
     /// Draws a rectangle
     unsafe fn draw_rect(
         &mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         r: f32,
         g: f32,
         b: f32,
@@ -42,10 +39,8 @@ pub trait Backend {
 
     unsafe fn draw_rounded_rect(
         &mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         radius:f32,
         r: f32,
         g: f32,
