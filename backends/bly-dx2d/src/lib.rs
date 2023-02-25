@@ -1,6 +1,6 @@
 //! Direct2D backend for Bly
 
-use bly_ac::Backend;
+use bly_ac::{Backend, Point2};
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
     Win32::Graphics::Direct2D::*, Win32::UI::WindowsAndMessaging::*,
@@ -157,10 +157,8 @@ impl Backend for Direct2DBackend {
 
     unsafe fn draw_line(
         &mut self,
-        x1: f32,
-        y1: f32,
-        x2: f32,
-        y2: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         stroke: f32,
         r: f32,
         g: f32,
@@ -188,8 +186,8 @@ impl Backend for Direct2DBackend {
         let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
 
         self.target.DrawLine(
-            D2D_POINT_2F { x: x1, y: y1 },
-            D2D_POINT_2F { x: x2, y: y2 },
+            D2D_POINT_2F { x: point1.0, y: point1.1 },
+            D2D_POINT_2F { x: point2.0, y: point2.1 },
             brush1,
             stroke,
             style,

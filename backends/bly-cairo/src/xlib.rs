@@ -1,5 +1,5 @@
 use crate::{util, CairoBackend};
-use bly_ac::Backend;
+use bly_ac::{Backend, Point2};
 use cairo_sys::{cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve, cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
 use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
@@ -163,10 +163,8 @@ impl Backend for XLibBackend {
 
     unsafe fn draw_line(
         &mut self,
-        x1: f32,
-        y1: f32,
-        x2: f32,
-        y2: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         stroke: f32,
         r: f32,
         g: f32,
@@ -182,8 +180,8 @@ impl Backend for XLibBackend {
             b as c_double,
             a as c_double,
         );
-        cairo_move_to(self.cairo, x1 as c_double, y1 as c_double);
-        cairo_line_to(self.cairo, x2 as c_double, y2 as c_double);
+        cairo_move_to(self.cairo, point1.0 as c_double, point1.1 as c_double);
+        cairo_line_to(self.cairo, point2.0 as c_double, point2.1 as c_double);
 
         cairo_stroke(self.cairo);
     }

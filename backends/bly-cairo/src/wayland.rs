@@ -1,5 +1,5 @@
 use crate::CairoBackend;
-use bly_ac::Backend;
+use bly_ac::{Backend, Point2};
 use std::ffi::c_void;
 
 pub(crate) fn create_backend(surface: *mut c_void) -> CairoBackend {
@@ -62,10 +62,8 @@ impl Backend for WayLandBackend {
 
     unsafe fn draw_line(
         &mut self,
-        x1: f32,
-        y1: f32,
-        x2: f32,
-        y2: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         stroke: f32,
         r: f32,
         g: f32,

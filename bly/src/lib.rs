@@ -9,7 +9,7 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-pub type Point2 = bly_ac::Point2;
+pub type Point2<T> = bly_ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
@@ -97,14 +97,12 @@ impl Bdc {
         }
 
     /// Draws a line
-    pub fn draw_line(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, stroke: f32, color: Color) {
+    pub fn draw_line(&mut self, x1: f32, point1:Point2<f32>,point2:Point2<f32>, stroke: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_line(
-                x1,
-                y1,
-                x2,
-                y2,
+                point1,
+                point2,
                 stroke,
                 vec.0 as f32,
                 vec.1 as f32,

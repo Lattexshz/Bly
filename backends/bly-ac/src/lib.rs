@@ -56,10 +56,8 @@ pub trait Backend {
     // Draws a line
     unsafe fn draw_line(
         &mut self,
-        x1: f32,
-        y1: f32,
-        x2: f32,
-        y2: f32,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
         stroke: f32,
         r: f32,
         g: f32,
@@ -68,18 +66,18 @@ pub trait Backend {
     );
 }
 
-pub struct Point2(pub f32,pub f32);
-impl Point2 {
-    pub fn new(a:f32,b:f32) -> Self {
+pub struct Point2<T>(pub T,pub T);
+impl<T> Point2<T> {
+    pub fn new(a:T,b:T) -> Self {
         Self {
             0: a,
             1: b,
         }
     }
 }
-pub struct Point3(f32,f32,f32);
-impl Point3 {
-    pub fn new(a:f32,b:f32,c:f32) -> Self {
+pub struct Point3<T>(pub T,pub T,pub T);
+impl<T> Point3<T> {
+    pub fn new(a:T,b:T,c:T) -> Self {
         Self {
             0: a,
             1: b,
@@ -87,9 +85,9 @@ impl Point3 {
         }
     }
 }
-pub struct Point4(f32,f32,f32,f32);
-impl Point4 {
-    pub fn new(a:f32,b:f32,c:f32,d:f32) -> Self {
+pub struct Point4<T>(pub T,pub T,pub T,pub T);
+impl<T> Point4<T> {
+    pub fn new(a:T,b:T,c:T,d:T) -> Self {
         Self {
             0: a,
             1: b,
