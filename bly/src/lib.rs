@@ -6,10 +6,16 @@
 extern crate log;
 extern crate env_logger as logger;
 
-use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use crate::ac::Backend;
 
-pub type Point2<T> = bly_ac::Point2<T>;
+#[cfg(target_os="windows")]
+mod dx2d;
+#[cfg(target_os="unix")]
+mod cairo;
+mod ac;
+
+pub type Point2<T> = ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
@@ -188,7 +194,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
-                bly_cairo::create_xlib_backend(handle.window)
+                cairo::create_xlib_backend(handle.window)
             }
         }
         RawWindowHandle::Xcb(_) => return Err(()),
@@ -200,7 +206,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Win32(handle) => {
             info!("Platform: Win32 Drawing backend is Dx2D");
             {
-                bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
+                dx2d::create_backend(handle.hwnd as isize).unwrap()
             }
         }
         RawWindowHandle::WinRt(_) => return Err(()),
