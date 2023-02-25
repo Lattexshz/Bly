@@ -74,8 +74,7 @@ impl Backend for XLibBackend {
 
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,
@@ -92,8 +91,8 @@ impl Backend for XLibBackend {
 
         cairo_arc(
             self.cairo,
-            (x + radius) as c_double,
-            (y + radius) as c_double,
+            (point.0 + radius) as c_double,
+            (point.1 + radius) as c_double,
             radius as c_double,
             0.0,
             2.0 * PI,

@@ -18,8 +18,7 @@ pub trait Backend {
     /// Draws a ellipse
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,

@@ -31,8 +31,7 @@ impl Backend for WayLandBackend {
 
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point1: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,

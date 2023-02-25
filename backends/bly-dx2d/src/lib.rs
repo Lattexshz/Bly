@@ -48,8 +48,7 @@ impl Backend for Direct2DBackend {
 
     unsafe fn draw_ellipse(
         &mut self,
-        x: f32,
-        y: f32,
+        point: Point2<f32>,
         radius: f32,
         r: f32,
         g: f32,
@@ -71,8 +70,8 @@ impl Backend for Direct2DBackend {
         self.target.FillEllipse(
             &mut D2D1_ELLIPSE {
                 point: D2D_POINT_2F {
-                    x: x + radius,
-                    y: y + radius,
+                    x: point.0 + radius,
+                    y: point.1 + radius,
                 },
                 radiusX: radius,
                 radiusY: radius,
