@@ -14,6 +14,7 @@ mod dx2d;
 #[cfg(target_os="linux")]
 mod cairo;
 mod ac;
+mod web;
 
 pub type Point2<T> = ac::Point2<T>;
 
@@ -210,7 +211,10 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
             }
         }
         RawWindowHandle::WinRt(_) => return Err(()),
-        RawWindowHandle::Web(_) => return Err(()),
+        RawWindowHandle::Web(handle) => {
+            info!("Platform: Web Drawing backend is web-sys");
+            web::create_backend(handle.id)
+        },
         RawWindowHandle::AndroidNdk(_) => return Err(()),
         RawWindowHandle::Haiku(_) => return Err(()),
         _ => return Err(()),
