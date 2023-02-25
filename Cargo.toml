@@ -1,10 +1,6 @@
 [workspace]
 members = [
     "bly",
-
-    # Backends
-    "backends/bly-cairo",
-
     # Abstraction crate
     "backends/bly-ac"
 ]

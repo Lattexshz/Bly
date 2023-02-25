@@ -11,6 +11,9 @@ use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
 #[cfg(target_os="windows")]
 mod dx2d;
+#[cfg(target_os="unix")]
+mod cairo;
+mod ac;
 
 pub type Point2<T> = bly_ac::Point2<T>;
 
@@ -191,7 +194,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
-                bly_cairo::create_xlib_backend(handle.window)
+                cairo::create_xlib_backend(handle.window)
             }
         }
         RawWindowHandle::Xcb(_) => return Err(()),
