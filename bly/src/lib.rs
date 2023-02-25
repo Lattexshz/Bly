@@ -6,8 +6,8 @@
 extern crate log;
 extern crate env_logger as logger;
 
-use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
+use crate::ac::Backend;
 
 #[cfg(target_os="windows")]
 mod dx2d;
@@ -15,7 +15,7 @@ mod dx2d;
 mod cairo;
 mod ac;
 
-pub type Point2<T> = bly_ac::Point2<T>;
+pub type Point2<T> = ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
