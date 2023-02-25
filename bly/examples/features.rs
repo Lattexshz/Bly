@@ -1,6 +1,6 @@
 #![allow(clippy::single_match)]
 
-use bly::Color;
+use bly::{Color, Point2};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
@@ -15,6 +15,8 @@ fn main() {
     window.set_title("A fantastic window!");
 
     let mut bly = bly::init(&window).unwrap();
+
+    let point = Point2::new(1.0,1.0);
 
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_wait();

@@ -67,3 +67,34 @@ pub trait Backend {
         a: f32,
     );
 }
+
+pub struct Point2(pub f32,pub f32);
+impl Point2 {
+    pub fn new(a:f32,b:f32) -> Self {
+        Self {
+            0: a,
+            1: b,
+        }
+    }
+}
+pub struct Point3(f32,f32,f32);
+impl Point3 {
+    pub fn new(a:f32,b:f32,c:f32) -> Self {
+        Self {
+            0: a,
+            1: b,
+            2: c,
+        }
+    }
+}
+pub struct Point4(f32,f32,f32,f32);
+impl Point4 {
+    pub fn new(a:f32,b:f32,c:f32,d:f32) -> Self {
+        Self {
+            0: a,
+            1: b,
+            2: c,
+            3: d
+        }
+    }
+}

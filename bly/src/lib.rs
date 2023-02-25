@@ -9,6 +9,8 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
+pub type Point2 = bly_ac::Point2;
+
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
 pub struct Bdc {
