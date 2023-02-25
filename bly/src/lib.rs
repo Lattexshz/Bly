@@ -13,11 +13,11 @@ pub type Point2<T> = bly_ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
-pub struct Bdc {
+pub struct Painter {
     pub(crate) backend: Box<dyn Backend>,
 }
 
-impl Bdc {
+impl Painter {
     /// Requests Backend to process the start of drawing
     /// This method is called internally in Bly::draw(). Therefore,  
     /// it is not possible for the library user to call this method.
@@ -108,19 +108,19 @@ impl Bdc {
     }
 }
 
-pub struct Bly {
-    pub(crate) bdc: Bdc,
+pub struct Canvas {
+    pub(crate) painter: Painter,
 }
 
-impl Bly {
+impl Canvas {
     /// drawing via bdc.
     pub fn draw<F>(&mut self, mut f: F)
     where
-        F: FnMut(&mut Bdc),
+        F: FnMut(&mut Painter),
     {
-        self.bdc.begin_draw();
-        f(&mut self.bdc);
-        self.bdc.flush();
+        self.painter.begin_draw();
+        f(&mut self.painter);
+        self.painter.flush();
     }
 }
 /// Mainly used to store vertex information
@@ -159,7 +159,7 @@ impl Into<Vec4> for Color {
 
 /// Initialize bly  
 /// If Backend is not supported or some error occurs during initialization, Err is returned.
-pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
+pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
@@ -191,8 +191,8 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
         _ => return Err(()),
     };
     info!("Successfully acquired backend");
-    Ok(Bly {
-        bdc: Bdc {
+    Ok(Canvas {
+        painter: Painter {
             backend: Box::new(backend),
         },
     })
