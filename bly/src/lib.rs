@@ -67,14 +67,12 @@ impl Bdc {
     }
 
     /// Draws a rectangle
-    pub fn draw_rect(&mut self, x: f32, y: f32, width: f32, height: f32, color: Color) {
+    pub fn draw_rect(&mut self, pos:Point2<f32>,
+                     size:Point2<f32>, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.draw_rect(
-                x,
-                y,
-                width,
-                height,
+                pos,size,
                 vec.0 as f32,
                 vec.1 as f32,
                 vec.2 as f32,
@@ -84,15 +82,13 @@ impl Bdc {
     }
 
     pub fn draw_rounded_rect(&mut self,
-        x: f32,
-        y: f32,
-        width: f32,
-        height: f32,
+        pos:Point2<f32>,
+        size:Point2<f32>,
         radius:f32,
         color: Color) {
             let vec:Vec4 = color.into();
             unsafe {
-                self.backend.draw_rounded_rect(x,y,width,height,radius,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
+                self.backend.draw_rounded_rect(pos,size,radius,vec.0 as f32,vec.1 as f32,vec.2 as f32,vec.3 as f32);
             }
         }
 
