@@ -3,22 +3,27 @@
 [![rust-clippy analyze](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml)
 ![GitHub](https://img.shields.io/github/license/Lattexshz/Bly)
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Lattexshz/Bly)
-![Lines of code](https://img.shields.io/tokei/lines/github/Lattexshz/Bly)
-# Functions to be implemented
 
- - [X] Window background fill
- - [X] Rectangle Drawing
- - [ ] Line Drawing
- - [ ] Triangle Drawing
+# Concept
+ - ### Easy to use
+   
+ Bly is easy to use and yet can be called from various windowing libraries using RawWindowHandle.
+ To start using Bly, simply write the following code
 
-# Examples
-```bash
-git clone https://github.com/Lattexshz/Bly
-cd Bly
-cd bly
-cargo run --example tiles
+```rust
+let mut canvas = match bly::create_canvas(&window) {
+    Ok(c) => c,
+    Err(_) => {
+        panic!("Can't initialize Bly!");
+    }
+};
 ```
+For more information and to see an actual sample, click [here](https://github.com/Lattexshz/Bly/blob/documentation/bly/examples/tiles.rs)!
 
+- ### Cross-platform
+
+Bly also aims to work the same way on all platforms.  
+Currently supported platforms are Win32 and XLib
 
 ## How it can be coded
 ```Rust

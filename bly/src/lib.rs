@@ -108,7 +108,7 @@ impl Painter {
     }
 }
 
-/// An interface to make Painter easier to use  
+/// An interface to make Painter easier to use
 /// (in fact, it is also a structure that hides Painter's behavior to some extent)
 pub struct Canvas {
     pub(crate) painter: Painter,
