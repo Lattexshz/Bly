@@ -1,6 +1,11 @@
 use crate::{util, CairoBackend};
 use bly_ac::{Backend, Point2};
-use cairo_sys::{cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve, cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width, cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_t, cairo_t, cairo_xlib_surface_create};
+use cairo_sys::{
+    cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve,
+    cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width,
+    cairo_set_source_rgb, cairo_set_source_rgba, cairo_stroke, cairo_surface_t, cairo_t,
+    cairo_xlib_surface_create,
+};
 use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
@@ -131,7 +136,7 @@ impl Backend for XLibBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        radius:f32,
+        radius: f32,
         r: f32,
         g: f32,
         b: f32,
@@ -145,14 +150,42 @@ impl Backend for XLibBackend {
             a as c_double,
         );
 
-        let degrees:f32 = (PI / 180.0) as f32;
+        let degrees: f32 = (PI / 180.0) as f32;
 
-        cairo_new_sub_path (self.cairo);
-        cairo_arc (self.cairo, (point1.0 + point2.0 - radius) as c_double, (point1.1 + radius) as c_double, radius as c_double, (-90.0 * degrees) as c_double, (0.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (point1.0 + point2.0 - radius) as c_double, (point1.1 + point2.1 - radius) as c_double, radius as c_double, (0.0 * degrees) as c_double, (90.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (point1.0 + radius) as c_double, (point1.1 + point2.1 - radius) as c_double, radius as c_double, (90.0 * degrees) as c_double, (180.0 * degrees) as c_double);
-        cairo_arc (self.cairo, (point1.0 + radius) as c_double, (point1.1 + radius) as c_double, radius as c_double, (180.0 * degrees) as c_double, (270.0 * degrees) as c_double);
-        cairo_close_path (self.cairo);
+        cairo_new_sub_path(self.cairo);
+        cairo_arc(
+            self.cairo,
+            (point1.0 + point2.0 - radius) as c_double,
+            (point1.1 + radius) as c_double,
+            radius as c_double,
+            (-90.0 * degrees) as c_double,
+            (0.0 * degrees) as c_double,
+        );
+        cairo_arc(
+            self.cairo,
+            (point1.0 + point2.0 - radius) as c_double,
+            (point1.1 + point2.1 - radius) as c_double,
+            radius as c_double,
+            (0.0 * degrees) as c_double,
+            (90.0 * degrees) as c_double,
+        );
+        cairo_arc(
+            self.cairo,
+            (point1.0 + radius) as c_double,
+            (point1.1 + point2.1 - radius) as c_double,
+            radius as c_double,
+            (90.0 * degrees) as c_double,
+            (180.0 * degrees) as c_double,
+        );
+        cairo_arc(
+            self.cairo,
+            (point1.0 + radius) as c_double,
+            (point1.1 + radius) as c_double,
+            radius as c_double,
+            (180.0 * degrees) as c_double,
+            (270.0 * degrees) as c_double,
+        );
+        cairo_close_path(self.cairo);
         cairo_fill_preserve(self.cairo);
     }
 
