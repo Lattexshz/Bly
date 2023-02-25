@@ -9,6 +9,9 @@ extern crate env_logger as logger;
 use bly_ac::Backend;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
+#[cfg(target_os="windows")]
+mod dx2d;
+
 pub type Point2<T> = bly_ac::Point2<T>;
 
 /// # Bly Drawing Context - Wrapper for Backend
@@ -200,7 +203,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Win32(handle) => {
             info!("Platform: Win32 Drawing backend is Dx2D");
             {
-                bly_dx2d::create_backend(handle.hwnd as isize).unwrap()
+                dx2d::create_backend(handle.hwnd as isize).unwrap()
             }
         }
         RawWindowHandle::WinRt(_) => return Err(()),

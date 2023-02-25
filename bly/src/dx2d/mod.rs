@@ -1,4 +1,4 @@
-//! Direct2D backend for Bly
+//! dx2
 
 use bly_ac::{Backend, Point2};
 use windows::{
@@ -292,6 +292,6 @@ fn create_factory() -> Result<ID2D1Factory1> {
             &options,
             std::mem::transmute(&mut result),
         )
-        .map(|()| result.unwrap())
+            .map(|()| result.unwrap())
     }
 }
