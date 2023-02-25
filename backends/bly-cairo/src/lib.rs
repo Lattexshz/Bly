@@ -4,15 +4,10 @@ use bly_ac::{Backend, Point2};
 use std::ffi::{c_ulong, c_void};
 
 mod util;
-mod wayland;
 mod xlib;
 
 pub fn create_xlib_backend(window: c_ulong) -> CairoBackend {
     xlib::create_backend(window)
-}
-
-pub fn create_wayland_backend(surface: *mut c_void) -> CairoBackend {
-    wayland::create_backend(surface)
 }
 
 pub struct CairoBackend {

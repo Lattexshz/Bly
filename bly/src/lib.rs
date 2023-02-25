@@ -163,7 +163,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
-        RawWindowHandle::AppKit(handle) => bly_corefoundation::create_backend(),
+        RawWindowHandle::AppKit(handle) => return Err(()),
         RawWindowHandle::Orbital(_) => return Err(()),
         #[cfg(target_os = "linux")]
         RawWindowHandle::Xlib(handle) => {
@@ -174,10 +174,7 @@ pub fn init(handle: &impl HasRawWindowHandle) -> Result<Bly, ()> {
         }
         RawWindowHandle::Xcb(_) => return Err(()),
         #[cfg(target_os = "linux")]
-        RawWindowHandle::Wayland(handle) => {
-            info!("Platform: WayLand Drawing backend is Cairo");
-            bly_cairo::create_wayland_backend(handle.surface)
-        }
+        RawWindowHandle::Wayland(handle) => return Err(()),
         RawWindowHandle::Drm(_) => return Err(()),
         RawWindowHandle::Gbm(_) => return Err(()),
         #[cfg(target_os = "windows")]
