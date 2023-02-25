@@ -37,6 +37,7 @@ pub trait Backend {
         a: f32,
     );
 
+    /// Draws a rounded rectangle
     unsafe fn draw_rounded_rect(
         &mut self,
         point1: Point2<f32>,
@@ -48,7 +49,7 @@ pub trait Backend {
         a: f32,
     );
 
-    // Draws a line
+    /// Draws a line
     unsafe fn draw_line(
         &mut self,
         point1: Point2<f32>,
@@ -61,6 +62,7 @@ pub trait Backend {
     );
 }
 
+/// Represents two points in two dimensions
 pub struct Point2<T>(pub T,pub T);
 impl<T> Point2<T> {
     pub fn new(a:T,b:T) -> Self {
@@ -70,6 +72,8 @@ impl<T> Point2<T> {
         }
     }
 }
+
+/// Represents three points in two dimensions
 pub struct Point3<T>(pub T,pub T,pub T);
 impl<T> Point3<T> {
     pub fn new(a:T,b:T,c:T) -> Self {
@@ -80,6 +84,8 @@ impl<T> Point3<T> {
         }
     }
 }
+
+/// Represents four points in two dimensions
 pub struct Point4<T>(pub T,pub T,pub T,pub T);
 impl<T> Point4<T> {
     pub fn new(a:T,b:T,c:T,d:T) -> Self {

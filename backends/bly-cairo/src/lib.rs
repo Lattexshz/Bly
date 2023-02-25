@@ -31,7 +31,6 @@ impl Backend for CairoBackend {
         self.backend.clear(r, g, b, a);
     }
 
-    /// Draws a ellipse
     unsafe fn draw_ellipse(
         &mut self,
         point: Point2<f32>,
@@ -44,7 +43,6 @@ impl Backend for CairoBackend {
         self.backend.draw_ellipse(point,radius,r,g,b,a);
     }
 
-    /// Draws a rectangle
     unsafe fn draw_rect(
         &mut self,
         point1: Point2<f32>,
@@ -70,7 +68,6 @@ impl Backend for CairoBackend {
         self.backend.draw_rounded_rect(point1,point2,radius,r,g,b,a);
     }
 
-    // Draws a line
     unsafe fn draw_line(
         &mut self,
         point1: Point2<f32>,
