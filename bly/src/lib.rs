@@ -146,6 +146,7 @@ impl Canvas {
         F: FnMut(&mut Painter),
     {
         self.painter.begin_draw();
+        info!("Begin draw");
         f(&mut self.painter);
         self.painter.flush();
     }

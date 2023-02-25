@@ -11,7 +11,8 @@ pub fn create_backend(id:u32) -> WebBackend {
     let height = window.inner_height().unwrap().as_f64().unwrap();
 
     let document = window.document().unwrap();
-    let canvas = document.create_element("canvas").unwrap();
+    let canvas = document.get_element_by_id("bly_canvas").unwrap();
+
     let canvas: web_sys::HtmlCanvasElement = canvas
         .dyn_into::<web_sys::HtmlCanvasElement>()
         .map_err(|_| ())
@@ -57,23 +58,35 @@ pub fn create_backend(id:u32) -> WebBackend {
     WebBackend {
         canvas,
         context,
+        window,
 
         width,
-        height
+        height,
+        r: 1.0,
+        g: 1.0,
+        b: 1.0,
+        a: 1.0,
     }
 }
 
 pub struct WebBackend {
     canvas: web_sys::HtmlCanvasElement,
     context: web_sys::CanvasRenderingContext2d,
+    window: web_sys::Window,
 
     width: f64,
-    height: f64
+    height: f64,
+
+    r:f32,
+    g:f32,
+    b:f32,
+    a:f32
 }
 
 impl Backend for WebBackend {
     unsafe fn begin_draw(&mut self) {
-
+        let (width,height) = self.get_window_size();
+        self.scale(width,height);
     }
 
     unsafe fn flush(&mut self) {
@@ -81,11 +94,14 @@ impl Backend for WebBackend {
     }
 
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
-        todo!()
+        let (width,height) = self.get_window_size();
+        self.scale(width,height);
+        (width,height)
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        self.canvas.style().set_css_text(&format!("background-color: rgba({},{},{},{});width: {}px; height: {}px;",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32,self.width,self.height));
+        self.set_rgba(r,g,b,a);
+        self.canvas.style().set_css_text(&format!("background-color: rgba({},{},{},{});width: {}px; height: {}px;",(self.r*255.0) as u32,(self.g*255.0) as u32,(self.b*255.0) as u32,(self.a*255.0) as u32,self.width,self.height));
     }
 
     unsafe fn draw_ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
@@ -106,7 +122,21 @@ impl Backend for WebBackend {
 }
 
 impl WebBackend {
-    fn scale(width:f32,height:f32) {
+    pub fn set_rgba(&mut self, r: f32, g: f32, b: f32, a: f32) {
+        self.r = r;
+        self.g = g;
+        self.b = b;
+        self.a = a;
+    }
+    fn scale(&mut self,width:f32,height:f32) {
+        self.width = width as f64;
+        self.height = height as f64;
+        self.canvas.style().set_css_text(&format!("background-color: green;width: {}px; height: {}px;",self.width as f64,self.height as f64));
+    }
 
+    fn get_window_size(&mut self) -> (f32,f32) {
+        let width = self.window.inner_width().unwrap().as_f64().unwrap() as f32;
+        let height = self.window.inner_height().unwrap().as_f64().unwrap() as f32;
+        (width,height)
     }
 }
