@@ -1,4 +1,3 @@
-use crate::{util, CairoBackend};
 use crate::ac::{Backend, Point2};
 use cairo_sys::{
     cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve,
