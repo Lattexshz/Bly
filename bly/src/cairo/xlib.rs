@@ -1,4 +1,5 @@
 use crate::ac::{Backend, Point2};
+use crate::cairo::{util, CairoBackend};
 use cairo_sys::{
     cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve,
     cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width,
@@ -8,7 +9,6 @@ use cairo_sys::{
 use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
-use crate::cairo::{CairoBackend, util};
 
 pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     unsafe {

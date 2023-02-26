@@ -1,11 +1,11 @@
 //! dx2d
 
+use crate::ac::Backend;
+use crate::Point2;
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
     Win32::Graphics::Direct2D::*, Win32::UI::WindowsAndMessaging::*,
 };
-use crate::ac::Backend;
-use crate::Point2;
 
 /// Create the backend from hwnd. This is the only method available to the public.
 pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
@@ -293,6 +293,6 @@ fn create_factory() -> Result<ID2D1Factory1> {
             &options,
             std::mem::transmute(&mut result),
         )
-            .map(|()| result.unwrap())
+        .map(|()| result.unwrap())
     }
 }

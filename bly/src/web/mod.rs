@@ -1,9 +1,8 @@
 use crate::ac::{Backend, Point2};
 
-
-pub fn create_backend(id:u32) -> WebBackend {
+pub fn create_backend(id: u32) -> WebBackend {
     use wasm_bindgen::JsCast;
-    info!("WebBackend is being created. ID:{}",id);
+    info!("WebBackend is being created. ID:{}", id);
 
     let window = web_sys::window().unwrap();
 
@@ -27,8 +26,9 @@ pub fn create_backend(id:u32) -> WebBackend {
 
     let body = document.body().unwrap();
 
-
-    canvas.style().set_css_text(&format!("width: {}px; height: {}px;",width,height));
+    canvas
+        .style()
+        .set_css_text(&format!("width: {}px; height: {}px;", width, height));
 
     // context.begin_path();
     //
@@ -77,16 +77,16 @@ pub struct WebBackend {
     width: f64,
     height: f64,
 
-    r:f32,
-    g:f32,
-    b:f32,
-    a:f32
+    r: f32,
+    g: f32,
+    b: f32,
+    a: f32,
 }
 
 impl Backend for WebBackend {
     unsafe fn begin_draw(&mut self) {
-        let (width,height) = self.get_window_size();
-        self.scale(width,height);
+        let (width, height) = self.get_window_size();
+        self.scale(width, height);
         self.context.begin_path();
     }
 
@@ -95,35 +95,103 @@ impl Backend for WebBackend {
     }
 
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
-        let (width,height) = self.get_window_size();
-        self.scale(width,height);
-        (width as u32,height as u32)
+        let (width, height) = self.get_window_size();
+        self.scale(width, height);
+        (width as u32, height as u32)
     }
 
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        self.context.set_fill_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{})",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
-        self.context.fill_rect(0.0,0.0,self.width,self.height+300.0);
+        self.context
+            .set_fill_style(&wasm_bindgen::JsValue::from_str(&format!(
+                "rgba({},{},{},{})",
+                (r * 255.0) as u32,
+                (g * 255.0) as u32,
+                (b * 255.0) as u32,
+                (a * 255.0) as u32
+            )));
+        self.context
+            .fill_rect(0.0, 0.0, self.width, self.height + 300.0);
     }
 
-    unsafe fn draw_ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn draw_ellipse(
+        &mut self,
+        point: Point2<f32>,
+        radius: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
         todo!()
     }
 
-    unsafe fn draw_rect(&mut self, point1: Point2<f32>, point2: Point2<f32>, r: f32, g: f32, b: f32, a: f32) {
-        self.context.set_fill_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{})",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
-        self.context.fill_rect(point1.0.into(),point1.1.into(),point2.0.into(),point2.1.into());
+    unsafe fn draw_rect(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        self.context
+            .set_fill_style(&wasm_bindgen::JsValue::from_str(&format!(
+                "rgba({},{},{},{})",
+                (r * 255.0) as u32,
+                (g * 255.0) as u32,
+                (b * 255.0) as u32,
+                (a * 255.0) as u32
+            )));
+        self.context.fill_rect(
+            point1.0.into(),
+            point1.1.into(),
+            point2.0.into(),
+            point2.1.into(),
+        );
     }
 
-    unsafe fn draw_rounded_rect(&mut self, point1: Point2<f32>, point2: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn draw_rounded_rect(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        radius: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
         todo!()
     }
 
-    unsafe fn draw_line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.context.set_fill_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{})",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
-        self.context.set_stroke_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{});",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
+    unsafe fn draw_line(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        stroke: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    ) {
+        self.context
+            .set_fill_style(&wasm_bindgen::JsValue::from_str(&format!(
+                "rgba({},{},{},{})",
+                (r * 255.0) as u32,
+                (g * 255.0) as u32,
+                (b * 255.0) as u32,
+                (a * 255.0) as u32
+            )));
+        self.context
+            .set_stroke_style(&wasm_bindgen::JsValue::from_str(&format!(
+                "rgba({},{},{},{});",
+                (r * 255.0) as u32,
+                (g * 255.0) as u32,
+                (b * 255.0) as u32,
+                (a * 255.0) as u32
+            )));
 
-        self.context.move_to(point1.0.into(),point1.1.into());
-        self.context.line_to(point2.0.into(),point2.1.into());
+        self.context.move_to(point1.0.into(), point1.1.into());
+        self.context.line_to(point2.0.into(), point2.1.into());
 
         self.context.stroke();
     }
@@ -136,15 +204,18 @@ impl WebBackend {
         self.b = b;
         self.a = a;
     }
-    fn scale(&mut self,width:f32,height:f32) {
+    fn scale(&mut self, width: f32, height: f32) {
         self.width = width as f64;
         self.height = height as f64;
-        self.canvas.style().set_css_text(&format!("width: {}px; height: {}px;",self.width as f64,self.height as f64));
+        self.canvas.style().set_css_text(&format!(
+            "width: {}px; height: {}px;",
+            self.width as f64, self.height as f64
+        ));
     }
 
-    fn get_window_size(&mut self) -> (f32,f32) {
+    fn get_window_size(&mut self) -> (f32, f32) {
         let width = self.window.inner_width().unwrap().as_f64().unwrap() as f32;
         let height = self.window.inner_height().unwrap().as_f64().unwrap() as f32;
-        (width,height)
+        (width, height)
     }
 }

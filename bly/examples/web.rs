@@ -1,12 +1,11 @@
 #![allow(clippy::single_match)]
 
-use std::env;
+use bly::{Color, Point2};
 use winit::{
     event::{Event, WindowEvent},
     event_loop::EventLoop,
     window::WindowBuilder,
 };
-use bly::{Canvas, Color, Point2};
 #[macro_use]
 extern crate log;
 extern crate env_logger as logger;
@@ -20,7 +19,7 @@ pub fn main() {
         .unwrap();
 
     #[cfg(target_arch = "wasm32")]
-        wasm::create_log_list(&window);
+    wasm::create_log_list(&window);
 
     let mut canvas = match bly::create_canvas(&window) {
         Ok(c) => c,
@@ -89,7 +88,12 @@ pub fn main() {
                         Color::Rgba(1.0, 0.0, 1.0, 1.0),
                     );
 
-                    painter.draw_line(Point2::new(0.0,0.0),Point2::new(500.0,50.0),1.0,Color::Red);
+                    painter.draw_line(
+                        Point2::new(0.0, 0.0),
+                        Point2::new(500.0, 50.0),
+                        1.0,
+                        Color::Red,
+                    );
                 });
 
                 window.request_redraw();
@@ -101,9 +105,9 @@ pub fn main() {
 
 #[cfg(target_arch = "wasm32")]
 mod wasm {
+    use bly::{Canvas, Color};
     use wasm_bindgen::prelude::*;
     use winit::{event::Event, window::Window};
-    use bly::{Canvas,Color};
 
     #[wasm_bindgen(start)]
     pub fn run() {

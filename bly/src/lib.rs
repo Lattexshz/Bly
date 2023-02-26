@@ -6,15 +6,15 @@
 extern crate log;
 extern crate env_logger as logger;
 
+use crate::ac::Backend;
 use once_cell::sync::OnceCell;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
-use crate::ac::Backend;
 
-#[cfg(target_os="windows")]
-mod dx2d;
-#[cfg(target_os="linux")]
-mod cairo;
 mod ac;
+#[cfg(target_os = "linux")]
+mod cairo;
+#[cfg(target_os = "windows")]
+mod dx2d;
 #[cfg(target_arch = "wasm32")]
 mod web;
 
@@ -192,7 +192,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     if CANVAS_CREATED.set(()).is_err() {
         panic!("Creating EventLoop multiple times is not supported.");
     }
-    let mut backend = match handle.raw_window_handle() {
+    let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
         RawWindowHandle::AppKit(handle) => return Err(()),
@@ -217,11 +217,11 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
             }
         }
         RawWindowHandle::WinRt(_) => return Err(()),
-        #[cfg(target_arch="wasm32")]
+        #[cfg(target_arch = "wasm32")]
         RawWindowHandle::Web(handle) => {
             info!("Platform: Web Drawing backend is web-sys");
             web::create_backend(handle.id)
-        },
+        }
         RawWindowHandle::AndroidNdk(_) => return Err(()),
         RawWindowHandle::Haiku(_) => return Err(()),
         _ => return Err(()),
