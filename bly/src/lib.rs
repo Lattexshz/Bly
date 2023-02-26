@@ -6,6 +6,7 @@
 extern crate log;
 extern crate env_logger as logger;
 
+use once_cell::sync::OnceCell;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 use crate::ac::Backend;
 
@@ -188,6 +189,10 @@ impl Into<Vec4> for Color {
 /// Initialize bly  
 /// If Backend is not supported or some error occurs during initialization, Err is returned.
 pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
+    static CANVAS_CREATED: OnceCell<()> = OnceCell::new();
+    if CANVAS_CREATED.set(()).is_err() {
+        panic!("Creating EventLoop multiple times is not supported.");
+    }
     let mut backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
