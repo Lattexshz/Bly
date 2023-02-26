@@ -5,7 +5,6 @@ use crate::ac::{Backend, Point2};
 extern crate khronos_egl as egl;
 
 pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, egl::Error> {
-    let surface = surface as wayland_client::protocol::wl_surface::WlSurface;
     let egl = egl::Instance::new(egl::Static);
 
     let wayland_display = wayland_client::Display::connect_to_env().expect("unable to connect to the wayland server");
@@ -33,13 +32,11 @@ pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, eg
     info!("Context:{:?}",context);
 
     Ok(WaylandBackend {
-        surface,
         context
     })
 }
 
 pub struct WaylandBackend {
-    surface: WlSurface,
     context: Context
 }
 
