@@ -13,6 +13,8 @@ use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 mod ac;
 #[cfg(target_os = "linux")]
 mod cairo;
+//#[cfg(target_os = "linux")]
+mod wayland;
 #[cfg(target_os = "windows")]
 mod dx2d;
 #[cfg(target_arch = "wasm32")]
@@ -192,6 +194,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     if CANVAS_CREATED.set(()).is_err() {
         panic!("Creating EventLoop multiple times is not supported.");
     }
+
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => return Err(()),
         #[cfg(target_os = "macos")]
@@ -206,7 +209,10 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         }
         RawWindowHandle::Xcb(_) => return Err(()),
         #[cfg(target_os = "linux")]
-        RawWindowHandle::Wayland(handle) => return Err(()),
+        RawWindowHandle::Wayland(handle) => {
+            info!("Platform: Wayland Drawing backend is EGL");
+            wayland::create_wayland_backend(handle.surface)
+        },
         RawWindowHandle::Drm(_) => return Err(()),
         RawWindowHandle::Gbm(_) => return Err(()),
         #[cfg(target_os = "windows")]
