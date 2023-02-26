@@ -3,13 +3,13 @@ use crate::ac::{Backend, Point2};
 
 pub(crate) fn create_xlib_backend(window: c_ulong) -> UnixBackend {
     UnixBackend {
-        backend: crate::cairo::create_xlib_backend(window)
+        backend: Box::new(crate::cairo::create_xlib_backend(window))
     }
 }
 
 pub(crate) fn create_wayland_backend(surface: *mut c_void) -> UnixBackend {
     UnixBackend {
-        backend: crate::wayland::create_wayland_backend(surface)
+        backend: Box::new(crate::wayland::create_wayland_backend(surface).unwrap())
     }
 }
 
