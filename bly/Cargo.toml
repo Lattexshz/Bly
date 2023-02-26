@@ -15,6 +15,8 @@ raw-window-handle = "0.5.0"
 log = "0.4.17"
 env_logger = "0.10.0"
 
+once_cell = "1.17.1"
+
 [target."cfg(windows)".dependencies]
 windows = {version = "0.38.0", features = [
     "Foundation_Numerics",
@@ -35,3 +37,38 @@ x11 = "2.21.0"
 
 [dev-dependencies]
 winit = "0.28.1"
+console_log = "0.2"
+instant = { version = "0.1", features = ["wasm-bindgen"] }
+once_cell = "1.12"
+log = "0.4"
+serde = { version = "1", features = ["serde_derive"] }
+raw-window-handle = "0.5.0"
+bitflags = "1"
+mint = { version = "0.5.6" }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web_sys = { version = "0.3.22", package = "web-sys",features = [
+    'console',
+    "AddEventListenerOptions",
+    'CssStyleDeclaration',
+    'BeforeUnloadEvent',
+    'Document',
+    'DomRect',
+    'Element',
+    'Event',
+    'EventTarget',
+    'FocusEvent',
+    'HtmlCanvasElement',
+    'HtmlElement',
+    'KeyboardEvent',
+    'MediaQueryList',
+    'MediaQueryListEvent',
+    'MouseEvent',
+    'Node',
+    'PointerEvent',
+    'Window',
+    'WheelEvent'
+] }
+
+[target.'cfg(target_arch = "wasm32")'.dependencies.wasm-bindgen]
+version = "0.2.45"

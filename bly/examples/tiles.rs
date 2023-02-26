@@ -31,6 +31,10 @@ fn main() {
         }
     };
 
+    canvas.draw(|painter| {
+        painter.clear(Color::WhiteGray);
+    });
+
     event_loop.run(move |event, _, control_flow| {
         control_flow.set_wait();
         match event {
