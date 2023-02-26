@@ -7,7 +7,7 @@ extern crate khronos_egl as egl;
 pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, egl::Error> {
     let egl = egl::Instance::new(egl::Static);
 
-    let wayland_display = wayland_client::Display::connect_to_env().expect("unable to connect to the wayland server");
+    let wayland_display = Display::connect_to_env().expect("unable to connect to the wayland server");
     let display = egl.get_display(wayland_display.get_display_ptr() as *mut std::ffi::c_void).unwrap();
     egl.initialize(display)?;
 
