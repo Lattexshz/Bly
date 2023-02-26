@@ -88,6 +88,8 @@ pub fn main() {
                         Point2::new(150.0, 150.0),
                         Color::Rgba(1.0, 0.0, 1.0, 1.0),
                     );
+
+                    painter.draw_line(Point2::new(0.0,0.0),Point2::new(500.0,50.0),1.0,Color::Red);
                 });
 
                 window.request_redraw();

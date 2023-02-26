@@ -113,7 +113,6 @@ impl Painter {
     /// Draws a line
     pub fn draw_line(
         &mut self,
-        _x1: f32,
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,

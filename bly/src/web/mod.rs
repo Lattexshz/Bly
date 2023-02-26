@@ -119,7 +119,13 @@ impl Backend for WebBackend {
     }
 
     unsafe fn draw_line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
-        todo!()
+        self.context.set_fill_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{})",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
+        self.context.set_stroke_style(&wasm_bindgen::JsValue::from_str(&format!("rgba({},{},{},{});",(r*255.0) as u32,(g*255.0) as u32,(b*255.0) as u32,(a*255.0) as u32)));
+
+        self.context.move_to(point1.0.into(),point1.1.into());
+        self.context.line_to(point2.0.into(),point2.1.into());
+
+        self.context.stroke();
     }
 }
 
