@@ -2,7 +2,9 @@
 ## Rusty fast cross-platform 2D graphics library
 [![rust-clippy analyze](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml/badge.svg)](https://github.com/Lattexshz/Bly/actions/workflows/rust-clippy.yml)
 ![GitHub](https://img.shields.io/github/license/Lattexshz/Bly)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Lattexshz/Bly)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/Lattexshz/Bly)  
+![Crates.io](https://img.shields.io/crates/v/Bly)
+![Crates.io](https://img.shields.io/crates/d/Bly)
 
 # Concept
  - ### Easy to use
@@ -95,17 +97,3 @@ fn main() {
 ![windows](res/img/tiles_windows.png)
 #### XLib
 ![xlib](res/img/tiles_xlib.png)
-
-# Crates
-
-## bly
-This is the core of bly. This crate is used to do the actual drawing
-
-## bly-ac
-Provides traits for abstraction of backend crates, etc., as described below
-
-## bly-dx2d
-Bly's drawing backend for Windows (uses Direct2D internally).
-
-## bly-cairo
-Bly's drawing backend for Unix (uses Cairo internally).
