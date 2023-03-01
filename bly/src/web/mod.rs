@@ -1,4 +1,4 @@
-use crate::ac::{Backend, Point2};
+use crate::{Backend, Point2};
 
 pub fn create_backend(id: u32) -> WebBackend {
     use wasm_bindgen::JsCast;

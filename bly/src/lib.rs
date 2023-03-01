@@ -6,7 +6,6 @@
 extern crate log;
 extern crate env_logger as logger;
 
-use crate::ac::Backend;
 use once_cell::sync::OnceCell;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
@@ -22,7 +21,96 @@ mod web;
 #[cfg(target_os = "linux")]
 mod unix;
 
-pub type Point2<T> = ac::Point2<T>;
+/// Trait for common back-end processing
+pub trait Backend {
+    // Initialize
+    /// Processing to start drawing (initialization, etc.)
+    unsafe fn begin_draw(&mut self);
+    /// Processing to finish drawing
+    unsafe fn flush(&mut self);
+
+    /// Get display size
+    unsafe fn get_display_size(&mut self) -> (u32, u32);
+
+    /// Fills the window background with a specific color
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
+
+    // Primitives
+    /// Draws a ellipse
+    unsafe fn draw_ellipse(
+        &mut self,
+        point: Point2<f32>,
+        radius: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    );
+
+    /// Draws a rectangle
+    unsafe fn draw_rect(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    );
+
+    /// Draws a rounded rectangle
+    unsafe fn draw_rounded_rect(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        radius: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    );
+
+    /// Draws a line
+    unsafe fn draw_line(
+        &mut self,
+        point1: Point2<f32>,
+        point2: Point2<f32>,
+        stroke: f32,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
+    );
+}
+
+/// Represents two points in two dimensions
+pub struct Point2<T>(pub T, pub T);
+impl<T> Point2<T> {
+    pub fn new(a: T, b: T) -> Self {
+        Self { 0: a, 1: b }
+    }
+}
+
+/// Represents three points in two dimensions
+pub struct Point3<T>(pub T, pub T, pub T);
+impl<T> Point3<T> {
+    pub fn new(a: T, b: T, c: T) -> Self {
+        Self { 0: a, 1: b, 2: c }
+    }
+}
+
+/// Represents four points in two dimensions
+pub struct Point4<T>(pub T, pub T, pub T, pub T);
+impl<T> Point4<T> {
+    pub fn new(a: T, b: T, c: T, d: T) -> Self {
+        Self {
+            0: a,
+            1: b,
+            2: c,
+            3: d,
+        }
+    }
+}
 
 /// # Bly Drawing Context - Wrapper for Backend
 /// Used for actual drawing  
@@ -194,6 +282,7 @@ impl Into<Vec4> for Color {
 pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     static CANVAS_CREATED: OnceCell<()> = OnceCell::new();
     if CANVAS_CREATED.set(()).is_err() {
+        error!("Creating EventLoop multiple times is not supported.");
         panic!("Creating EventLoop multiple times is not supported.");
     }
 
