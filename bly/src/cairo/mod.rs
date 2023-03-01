@@ -31,7 +31,7 @@ impl Backend for CairoBackend {
         self.backend.clear(r, g, b, a);
     }
 
-    unsafe fn draw_ellipse(
+    unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
         radius: f32,
@@ -40,10 +40,10 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_ellipse(point, radius, r, g, b, a);
+        self.backend.ellipse(point, radius, r, g, b, a);
     }
 
-    unsafe fn draw_rect(
+    unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -52,10 +52,10 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_rect(point1, point2, r, g, b, a);
+        self.backend.rectangle(point1, point2, r, g, b, a);
     }
 
-    unsafe fn draw_rounded_rect(
+    unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -66,10 +66,10 @@ impl Backend for CairoBackend {
         a: f32,
     ) {
         self.backend
-            .draw_rounded_rect(point1, point2, radius, r, g, b, a);
+            .rounded_rectangle(point1, point2, radius, r, g, b, a);
     }
 
-    unsafe fn draw_line(
+    unsafe fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -79,6 +79,6 @@ impl Backend for CairoBackend {
         b: f32,
         a: f32,
     ) {
-        self.backend.draw_line(point1, point2, stroke, r, g, b, a);
+        self.backend.line(point1, point2, stroke, r, g, b, a);
     }
 }

@@ -47,7 +47,7 @@ impl Backend for Direct2DBackend {
         self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
-    unsafe fn draw_ellipse(
+    unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
         radius: f32,
@@ -81,7 +81,7 @@ impl Backend for Direct2DBackend {
         );
     }
 
-    unsafe fn draw_rect(
+    unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -112,7 +112,7 @@ impl Backend for Direct2DBackend {
         self.target.FillRectangle(&rect, brush);
     }
 
-    unsafe fn draw_rounded_rect(
+    unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -150,7 +150,7 @@ impl Backend for Direct2DBackend {
         self.target.FillRoundedRectangle(&rounded_rect, brush);
     }
 
-    unsafe fn draw_line(
+    unsafe fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,

@@ -37,7 +37,7 @@ pub trait Backend {
 
     // Primitives
     /// Draws a ellipse
-    unsafe fn draw_ellipse(
+    unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
         radius: f32,
@@ -48,7 +48,7 @@ pub trait Backend {
     );
 
     /// Draws a rectangle
-    unsafe fn draw_rect(
+    unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -59,7 +59,7 @@ pub trait Backend {
     );
 
     /// Draws a rounded rectangle
-    unsafe fn draw_rounded_rect(
+    unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -71,7 +71,7 @@ pub trait Backend {
     );
 
     /// Draws a line
-    unsafe fn draw_line(
+    unsafe fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -152,10 +152,10 @@ impl Painter {
     }
 
     /// Draws an ellipse
-    pub fn draw_ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
+    pub fn ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
-            self.backend.draw_ellipse(
+            self.backend.ellipse(
                 pos,
                 radius,
                 vec.0 as f32,
@@ -167,10 +167,10 @@ impl Painter {
     }
 
     /// Draws a rectangle
-    pub fn draw_rect(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
+    pub fn rectangle(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
-            self.backend.draw_rect(
+            self.backend.rectangle(
                 pos,
                 size,
                 vec.0 as f32,
@@ -181,7 +181,7 @@ impl Painter {
         }
     }
 
-    pub fn draw_rounded_rect(
+    pub fn rounded_rectangle(
         &mut self,
         pos: Point2<f32>,
         size: Point2<f32>,
@@ -190,7 +190,7 @@ impl Painter {
     ) {
         let vec: Vec4 = color.into();
         unsafe {
-            self.backend.draw_rounded_rect(
+            self.backend.rounded_rectangle(
                 pos,
                 size,
                 radius,
@@ -203,7 +203,7 @@ impl Painter {
     }
 
     /// Draws a line
-    pub fn draw_line(
+    pub fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -212,7 +212,7 @@ impl Painter {
     ) {
         unsafe {
             let vec: Vec4 = color.into();
-            self.backend.draw_line(
+            self.backend.line(
                 point1,
                 point2,
                 stroke,

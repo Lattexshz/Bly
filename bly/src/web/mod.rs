@@ -90,7 +90,7 @@ impl Backend for WebBackend {
             .fill_rect(0.0, 0.0, self.width, self.height + 300.0);
     }
 
-    unsafe fn draw_ellipse(
+    unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
         radius: f32,
@@ -102,7 +102,7 @@ impl Backend for WebBackend {
         todo!()
     }
 
-    unsafe fn draw_rect(
+    unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -127,7 +127,7 @@ impl Backend for WebBackend {
         );
     }
 
-    unsafe fn draw_rounded_rect(
+    unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -140,7 +140,7 @@ impl Backend for WebBackend {
         todo!()
     }
 
-    unsafe fn draw_line(
+    unsafe fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,

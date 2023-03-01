@@ -35,19 +35,19 @@ impl Backend for UnixBackend {
         self.backend.clear(r,g,b,a);
     }
 
-    unsafe fn draw_ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_ellipse(point,radius,r,g,b,a);
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.ellipse(point,radius,r,g,b,a);
     }
 
-    unsafe fn draw_rect(&mut self, point1: Point2<f32>, point2: Point2<f32>, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_rect(point1,point2,r,g,b,a);
+    unsafe fn rectangle(&mut self, point1: Point2<f32>, point2: Point2<f32>, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.rectangle(point1,point2,r,g,b,a);
     }
 
-    unsafe fn draw_rounded_rect(&mut self, point1: Point2<f32>, point2: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_rounded_rect(point1,point2,radius,r,g,b,a);
+    unsafe fn rounded_rectangle(&mut self, point1: Point2<f32>, point2: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.rounded_rectangle(point1,point2,radius,r,g,b,a);
     }
 
-    unsafe fn draw_line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.draw_line(point1,point2,stroke,r,g,b,a);
+    unsafe fn line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.line(point1,point2,stroke,r,g,b,a);
     }
 }

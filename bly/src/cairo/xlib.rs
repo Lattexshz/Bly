@@ -81,7 +81,7 @@ impl Backend for XLibBackend {
         cairo_fill(self.cairo);
     }
 
-    unsafe fn draw_ellipse(
+    unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
         radius: f32,
@@ -110,7 +110,7 @@ impl Backend for XLibBackend {
         cairo_fill(self.cairo);
     }
 
-    unsafe fn draw_rect(
+    unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -136,7 +136,7 @@ impl Backend for XLibBackend {
         cairo_fill(self.cairo);
     }
 
-    unsafe fn draw_rounded_rect(
+    unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
@@ -193,7 +193,7 @@ impl Backend for XLibBackend {
         cairo_fill_preserve(self.cairo);
     }
 
-    unsafe fn draw_line(
+    unsafe fn line(
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,

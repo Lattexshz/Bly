@@ -46,49 +46,49 @@ fn main() {
             Event::MainEventsCleared => canvas.draw(|painter| {
                 painter.clear(Color::WhiteGray);
 
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(20.0, 20.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(1.0, 1.0, 1.0, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(180.0, 20.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(0.5, 0.5, 0.5, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(340.0, 20.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(0.0, 0.0, 0.0, 1.0),
                 );
 
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(20.0, 180.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(1.0, 0.0, 0.0, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(180.0, 180.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(0.0, 1.0, 0.0, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(340.0, 180.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(0.0, 0.0, 1.0, 1.0),
                 );
 
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(20.0, 340.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(1.0, 1.0, 0.0, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(180.0, 340.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(0.0, 1.0, 1.0, 1.0),
                 );
-                painter.draw_rect(
+                painter.rectangle(
                     Point2::new(340.0, 340.0),
                     Point2::new(150.0, 150.0),
                     Color::Rgba(1.0, 0.0, 1.0, 1.0),
