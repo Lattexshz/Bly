@@ -238,7 +238,6 @@ impl Canvas {
         F: FnMut(&mut Painter),
     {
         self.painter.begin_draw();
-        info!("Begin draw");
         f(&mut self.painter);
         self.painter.flush();
     }
@@ -280,6 +279,7 @@ impl Into<Vec4> for Color {
 /// Initialize bly  
 /// If Backend is not supported or some error occurs during initialization, Err is returned.
 pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
+    //panic if the canvas has been created once
     static CANVAS_CREATED: OnceCell<()> = OnceCell::new();
     if CANVAS_CREATED.set(()).is_err() {
         error!("Creating EventLoop multiple times is not supported.");
@@ -287,10 +287,22 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     }
 
     let backend = match handle.raw_window_handle() {
-        RawWindowHandle::UiKit(_) => return Err(()),
+        RawWindowHandle::UiKit(_) => {
+            info!("Platform: UiKit");
+            error!("This platform is unsupported");
+            return Err(())
+        },
         #[cfg(target_os = "macos")]
-        RawWindowHandle::AppKit(handle) => return Err(()),
-        RawWindowHandle::Orbital(_) => return Err(()),
+        RawWindowHandle::AppKit(handle) => {
+            info!("Platform: AppKit");
+            error!("This platform is unsupported");
+            return Err(())
+        },
+        RawWindowHandle::Orbital(_) => {
+            info!("Platform: Orbital");
+            error!("This platform is unsupported");
+            return Err(())}
+        },
         #[cfg(target_os = "linux")]
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
@@ -298,30 +310,55 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
                 unix::create_xlib_backend(handle.window)
             }
         }
-        RawWindowHandle::Xcb(_) => return Err(()),
+        RawWindowHandle::Xcb(_) => {
+            info!("Platform: Xcb");
+            error!("This platform is unsupported");
+            return Err(())
+        },
         #[cfg(target_os = "linux")]
         RawWindowHandle::Wayland(handle) => {
             info!("Platform: Wayland Drawing backend is EGL");
             unix::create_wayland_backend(handle.surface)
         },
-        RawWindowHandle::Drm(_) => return Err(()),
-        RawWindowHandle::Gbm(_) => return Err(()),
+        RawWindowHandle::Drm(_) => {
+            info!("Platform: Drm");
+            error!("This platform is unsupported");
+            return Err(())
+        },
+        RawWindowHandle::Gbm(_) => {
+            info!("Platform: Gbm");
+            error!("This platform is unsupported");
+            return Err(())
+        },
         #[cfg(target_os = "windows")]
         RawWindowHandle::Win32(handle) => {
             info!("Platform: Win32 Drawing backend is Dx2D");
-            {
-                dx2d::create_backend(handle.hwnd as isize).unwrap()
-            }
+            dx2d::create_backend(handle.hwnd as isize).unwrap()
         }
-        RawWindowHandle::WinRt(_) => return Err(()),
+        RawWindowHandle::WinRt(_) => {
+            info!("Platform: WinRt");
+            error!("This platform is unsupported");
+            return Err(())
+        },
         #[cfg(target_arch = "wasm32")]
         RawWindowHandle::Web(handle) => {
             info!("Platform: Web Drawing backend is web-sys");
             web::create_backend(handle.id)
         }
-        RawWindowHandle::AndroidNdk(_) => return Err(()),
-        RawWindowHandle::Haiku(_) => return Err(()),
-        _ => return Err(()),
+        RawWindowHandle::AndroidNdk(_) => {
+            info!("Platform: AndroidNDK");
+            error!("This platform is unsupported");
+            return Err(())
+        },
+        RawWindowHandle::Haiku(_) => {
+            info!("Platform: Haiku");
+            error!("This platform is unsupported");
+            return Err(())
+        },
+        _ => {
+            error!("Unknown platform");
+            return Err(())
+        },
     };
     info!("Successfully acquired backend");
 
