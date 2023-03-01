@@ -1,6 +1,6 @@
 use std::ffi::c_void;
 use khronos_egl::Context;
-use crate::ac::{Backend, Point2};
+use crate::{Backend, Point2};
 extern crate khronos_egl as egl;
 
 pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, egl::Error> {

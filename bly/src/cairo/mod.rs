@@ -1,6 +1,6 @@
 //! Cairo backend for Bly
 
-use crate::ac::{Backend, Point2};
+use crate::{Backend, Point2};
 use std::ffi::{c_ulong, c_void};
 
 mod util;

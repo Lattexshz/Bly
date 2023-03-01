@@ -1,8 +1,8 @@
-use crate::ac::{Backend, Point2};
+use crate::{Backend, Point2};
 
 pub fn create_backend(id: u32) -> WebBackend {
     use wasm_bindgen::JsCast;
-    info!("WebBackend is being created. ID:{}", id);
+    debug!("WebBackend is being created. ID:{}", id);
 
     let window = web_sys::window().unwrap();
 
@@ -30,30 +30,7 @@ pub fn create_backend(id: u32) -> WebBackend {
         .style()
         .set_css_text(&format!("width: {}px; height: {}px;", width, height));
 
-    // context.begin_path();
-    //
-    // // Draw the outer circle.
-    // context
-    //     .arc(75.0, 75.0, 50.0, 0.0, std::f64::consts::PI * 2.0)
-    //     .unwrap();
-    //
-    // // Draw the mouth.
-    // context.move_to(110.0, 75.0);
-    // context.arc(75.0, 75.0, 35.0, 0.0, std::f64::consts::PI).unwrap();
-    //
-    // // Draw the left eye.
-    // context.move_to(65.0, 65.0);
-    // context
-    //     .arc(60.0, 65.0, 5.0, 0.0, std::f64::consts::PI * 2.0)
-    //     .unwrap();
-    //
-    // // Draw the right eye.
-    // context.move_to(95.0, 65.0);
-    // context
-    //     .arc(90.0, 65.0, 5.0, 0.0, std::f64::consts::PI * 2.0)
-    //     .unwrap();
-    //
-    // context.stroke();
+
     body.append_child(&canvas).unwrap();
     WebBackend {
         canvas,
