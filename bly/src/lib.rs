@@ -286,6 +286,9 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         panic!("Creating EventLoop multiple times is not supported.");
     }
 
+    #[cfg(feature = "experimental")]
+    warn!("You are using the experimental version of Bly");
+
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => {
             info!("Platform: UiKit");
@@ -304,6 +307,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
             return Err(())}
         },
         #[cfg(target_os = "linux")]
+        #[cfg(feature = "xlib")]
         RawWindowHandle::Xlib(handle) => {
             info!("Platform: Xlib Drawing backend is Cairo");
             {
@@ -316,6 +320,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
             return Err(())
         },
         #[cfg(target_os = "linux")]
+        #[cfg(feature = "wayland")]
         RawWindowHandle::Wayland(handle) => {
             info!("Platform: Wayland Drawing backend is EGL");
             unix::create_wayland_backend(handle.surface)
