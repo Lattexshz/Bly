@@ -231,6 +231,7 @@ fn create_target(hwnd: HWND, factory: &ID2D1Factory1) -> (ID2D1HwndRenderTarget,
 impl Direct2DBackend {
     /// Create a new backend
     fn new(hwnd: HWND) -> Result<Self> {
+        info!("HWND: {}",hwnd);
         let factory = create_factory()?;
         let (target, width, height) = create_target(hwnd, &factory);
         Ok(Self {

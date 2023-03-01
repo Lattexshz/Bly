@@ -2,7 +2,7 @@ use crate::{Backend, Point2};
 
 pub fn create_backend(id: u32) -> WebBackend {
     use wasm_bindgen::JsCast;
-    debug!("WebBackend is being created. ID:{}", id);
+    info!("WebBackend is being created. ID:{}", id);
 
     let window = web_sys::window().unwrap();
 

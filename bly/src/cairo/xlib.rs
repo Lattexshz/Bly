@@ -13,6 +13,7 @@ use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
 pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     unsafe {
         let display = XOpenDisplay(std::ptr::null_mut());
+        info!("Display acquired. {:?}",display);
         let (width, height) = util::get_xlib_window_size(display, window);
 
         let surface = cairo_xlib_surface_create(
@@ -22,6 +23,9 @@ pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
             width as c_int,
             height as c_int,
         );
+        
+        info!("A Cairo surface has been created.");
+
         let cairo = cairo_create(surface);
 
         CairoBackend {

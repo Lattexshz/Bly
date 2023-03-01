@@ -5,10 +5,15 @@ extern crate khronos_egl as egl;
 
 pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, egl::Error> {
     let egl = egl::Instance::new(egl::Static);
+    info!("EGL instance has been created.");
 
     let wayland_display = wayland_client::Display::connect_to_env().expect("unable to connect to the wayland server");
+    
+    info!("Connected to Wayland server.");
     let display = egl.get_display(wayland_display.get_display_ptr() as *mut std::ffi::c_void).unwrap();
+
     egl.initialize(display)?;
+    info!("EGL initialization succeeded");
 
     let attributes = [
         egl::RED_SIZE, 8,
@@ -28,7 +33,8 @@ pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, eg
 
     let context = egl.create_context(display, config, None, &context_attributes)?;
 
-    info!("Context:{:?}",context);
+    info!("EGL context successfully created");
+    info!("Pointer: {:?}",context);
 
     Ok(WaylandBackend {
         context
