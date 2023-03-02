@@ -37,6 +37,9 @@ jobs:
           toolchain: stable
           components: clippy
           override: true
+          
+      - name: Install required library
+        run: sudo apt install libgles2-mesa-dev libegl1-mesa-dev
 
       - name: Install required cargo
         run: cargo install clippy-sarif sarif-fmt
