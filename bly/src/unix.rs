@@ -1,5 +1,5 @@
 use std::ffi::{c_ulong, c_void};
-use crate::ac::{Backend, Point2};
+use crate::{Backend, Point2};
 
 pub(crate) fn create_xlib_backend(window: c_ulong) -> UnixBackend {
     UnixBackend {

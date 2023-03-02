@@ -9,7 +9,6 @@ extern crate env_logger as logger;
 use once_cell::sync::OnceCell;
 use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
-mod ac;
 #[cfg(target_os = "linux")]
 pub(crate) mod cairo;
 #[cfg(target_os = "linux")]

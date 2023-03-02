@@ -55,7 +55,7 @@ pub struct WaylandBackend {
     surface: egl::Surface,
     display: egl::Display,
     wl_display: *mut wl_display,
-    context: egl::Context
+    context: Context
 }
 
 impl Backend for WaylandBackend {
