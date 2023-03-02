@@ -6,6 +6,7 @@ extern crate khronos_egl as egl;
 use wayland_sys::client::WAYLAND_CLIENT_HANDLE;
 use wayland_sys::egl::WAYLAND_EGL_HANDLE;
 
+#[doc(hidden)]
 pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, egl::Error> {
     let wl_display = unsafe {
         wayland_sys::ffi_dispatch!(WAYLAND_CLIENT_HANDLE, wl_display_connect, ::std::ptr::null())

@@ -2,7 +2,7 @@
 
 use crate::{Backend, Point2};
 
-/// Create a backend for the web
+#[doc(hidden)]
 pub fn create_backend(id: u32) -> WebBackend {
     use wasm_bindgen::JsCast;
     info!("WebBackend is being created. ID:{}", id);
@@ -49,8 +49,6 @@ pub fn create_backend(id: u32) -> WebBackend {
     }
 }
 
-
-/// Create a backend for the web
 #[doc(hidden)]
 pub struct WebBackend {
     canvas: web_sys::HtmlCanvasElement,

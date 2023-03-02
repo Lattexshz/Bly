@@ -5,7 +5,7 @@ use std::ffi::c_ulong;
 
 mod util;
 mod xlib;
-
+#[doc(hidden)]
 pub fn create_xlib_backend(window: c_ulong) -> CairoBackend {
     xlib::create_backend(window)
 }
