@@ -1,60 +1,45 @@
-name: Auto release
+name: Create release tag and release note.
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches: [ main ]
 
-auto-release:
-    name: Auto Release
+jobs:
+  create-release-tag:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
+
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TZ: 'Asia/Tokyo'
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-      - name: Install Rust toolchain
-        uses: actions-rs/toolchain@16499b5e05bf2e26879000db0c1d13f7e13fa3af #@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: clippy
-          override: true
-
-      - name: Install required library
-        run: sudo apt install libgles2-mesa-dev libegl1-mesa-dev
-          
-      - name: Build artifact
-        run:
-          cargo build
-          --release
-        continue-on-error: false
-
-      - name: Zip output
+      - name: Get previous tag
+        id: pre_tag
         run: |
-          cd target
-          zip -r target-release-output.zip release
+          echo "::set-output name=pre_tag::$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/latest | jq -r .tag_name)"
 
-      - name: Create release
-        id: create_release
-        uses: actions/create-release@v1.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+      - name: Generate release tag
+        id: release_tag
+        run: |
+          today=$(date +'%Y.%m.%d')
+          pre_release_date=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'-' '{print $1}')
+          pre_release_count=$(echo ${{ steps.pre_tag.outputs.pre_tag }} | awk -F'-' '{print $2}')
+          if [[ ! $pre_release_date = $today ]]; then
+            echo "init count"
+            pre_release_count=0
+          fi
+          echo "::set-output name=release_tag::$today-$(($pre_release_count + 1))"
 
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./target/target-release-output.zip
-          asset_name: target-release-output.zip
-          asset_content_type: application/zip
+      - name: Generate release note
+        id: release_note
+        run: |
+          echo "::set-output name=release_note::$(curl -X POST -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/releases/generate-notes -d '{"tag_name":"${{ steps.release_tag.outputs.release_tag }}", "previous_tag_name":"${{ steps.pre_tag.outputs.pre_tag }}"}' | jq .body | sed 's/"//g')"
+
+      - name: Create Release
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -d "{ \"tag_name\": \"${{ steps.release_tag.outputs.release_tag }}\", \"name\": \"${{ steps.release_tag.outputs.release_tag }}\", \"body\": \"${{ steps.release_note.outputs.release_note }}\"}" \
+            https://api.github.com/repos/${{ github.repository }}/releases
