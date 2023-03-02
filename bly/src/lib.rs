@@ -24,22 +24,30 @@ mod unix;
 pub trait Backend {
     // Initialize
     /// Processing to start drawing (initialization, etc.)
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn begin_draw(&mut self);
     /// Processing to finish drawing
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn flush(&mut self);
-
     /// Get display size
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32);
-
     /// Fills the window background with a specific color
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
 
     // Primitives
     /// Draws a ellipse
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn ellipse(
         &mut self,
@@ -52,6 +60,8 @@ pub trait Backend {
     );
 
     /// Draws a rectangle
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn rectangle(
         &mut self,
@@ -64,6 +74,8 @@ pub trait Backend {
     );
 
     /// Draws a rounded rectangle
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
@@ -77,6 +89,8 @@ pub trait Backend {
     );
 
     /// Draws a line
+    /// # Safety 
+    /// Call the method from Painter
     #[inline]
     unsafe fn line(
         &mut self,
