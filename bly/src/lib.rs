@@ -304,7 +304,7 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Orbital(_) => {
             info!("Platform: Orbital");
             error!("This platform is unsupported");
-            return Err(())}
+            return Err(())
         },
         #[cfg(target_os = "linux")]
         #[cfg(feature = "xlib")]
