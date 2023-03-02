@@ -7,13 +7,14 @@ use windows::{
     Win32::Graphics::Direct2D::*, Win32::UI::WindowsAndMessaging::*,
 };
 
-/// Create the backend from hwnd. This is the only method available to the public.
+#[doc(hidden)]
 pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
     let backend = Direct2DBackend::new(HWND(hwnd)).unwrap();
 
     Ok(backend)
 }
 
+#[doc(hidden)]
 pub struct Direct2DBackend {
     handle: HWND,
 

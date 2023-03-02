@@ -10,6 +10,7 @@ use std::f64::consts::PI;
 use std::ffi::{c_double, c_int, c_ulong};
 use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
 
+#[doc(hidden)]
 pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     unsafe {
         let display = XOpenDisplay(std::ptr::null_mut());
@@ -41,6 +42,7 @@ pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     }
 }
 
+#[doc(hidden)]
 pub(crate) struct XLibBackend {
     handle: c_ulong,
     display: *mut Display,

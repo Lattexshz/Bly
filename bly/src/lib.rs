@@ -24,18 +24,31 @@ mod unix;
 pub trait Backend {
     // Initialize
     /// Processing to start drawing (initialization, etc.)
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn begin_draw(&mut self);
     /// Processing to finish drawing
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn flush(&mut self);
-
     /// Get display size
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32);
-
     /// Fills the window background with a specific color
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
 
     // Primitives
     /// Draws a ellipse
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
@@ -47,6 +60,9 @@ pub trait Backend {
     );
 
     /// Draws a rectangle
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -58,6 +74,9 @@ pub trait Backend {
     );
 
     /// Draws a rounded rectangle
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -70,6 +89,9 @@ pub trait Backend {
     );
 
     /// Draws a line
+    /// # Safety 
+    /// Call the method from Painter
+    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,
@@ -121,6 +143,7 @@ impl Painter {
     /// Requests Backend to process the start of drawing
     /// This method is called internally in Bly::draw(). Therefore,  
     /// it is not possible for the library user to call this method.
+    #[inline]
     pub(crate) fn begin_draw(&mut self) {
         unsafe {
             self.backend.begin_draw();
@@ -130,6 +153,7 @@ impl Painter {
     /// Requests the backend to process the end of drawing
     /// This method is called internally in Bly::draw(). Therefore,   
     /// it is not possible for the library user to call this method.
+    #[inline]
     pub(crate) fn flush(&mut self) {
         unsafe {
             self.backend.flush();
@@ -137,11 +161,13 @@ impl Painter {
     }
 
     /// Get display size
+    #[inline]
     pub fn get_size(&mut self) -> (u32, u32) {
         unsafe { self.backend.get_display_size() }
     }
 
     /// Fills the window background with the specified color
+    #[inline]
     pub fn clear(&mut self, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -151,6 +177,7 @@ impl Painter {
     }
 
     /// Draws an ellipse
+    #[inline]
     pub fn ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -166,6 +193,7 @@ impl Painter {
     }
 
     /// Draws a rectangle
+    #[inline]
     pub fn rectangle(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
@@ -179,7 +207,8 @@ impl Painter {
             );
         }
     }
-
+    
+    #[inline]
     pub fn rounded_rectangle(
         &mut self,
         pos: Point2<f32>,
@@ -202,6 +231,7 @@ impl Painter {
     }
 
     /// Draws a line
+    #[inline]
     pub fn line(
         &mut self,
         point1: Point2<f32>,
@@ -231,7 +261,7 @@ pub struct Canvas {
 }
 
 impl Canvas {
-    /// drawing via bdc.
+    /// drawing via painter.
     pub fn draw<F>(&mut self, mut f: F)
     where
         F: FnMut(&mut Painter),
