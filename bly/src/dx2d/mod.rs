@@ -14,6 +14,7 @@ pub fn create_backend(hwnd: isize) -> std::result::Result<Direct2DBackend, ()> {
     Ok(backend)
 }
 
+#[doc(hidden)]
 pub struct Direct2DBackend {
     handle: HWND,
 

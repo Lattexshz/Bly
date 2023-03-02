@@ -10,6 +10,7 @@ pub fn create_xlib_backend(window: c_ulong) -> CairoBackend {
     xlib::create_backend(window)
 }
 
+#[doc(hidden)]
 pub struct CairoBackend {
     backend: Box<dyn Backend>,
 }

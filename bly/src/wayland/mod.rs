@@ -50,6 +50,7 @@ pub fn create_wayland_backend(surface: *mut c_void) -> Result<WaylandBackend, eg
     })
 }
 
+#[doc(hidden)]
 pub struct WaylandBackend {
     egl: egl::Instance<egl::Static>,
     surface: egl::Surface,

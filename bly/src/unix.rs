@@ -1,20 +1,24 @@
 use std::ffi::{c_ulong, c_void};
 use crate::{Backend, Point2};
 
+/// Create a backend for XLib and store it in UnixBackend
 pub(crate) fn create_xlib_backend(window: c_ulong) -> UnixBackend {
     UnixBackend {
         backend: Box::new(crate::cairo::create_xlib_backend(window))
     }
 }
 
+/// Create a backend for Wayland and store it in UnixBackend
 pub(crate) fn create_wayland_backend(surface: *mut c_void) -> UnixBackend {
     UnixBackend {
         backend: Box::new(crate::wayland::create_wayland_backend(surface).unwrap())
     }
 }
 
-
+/// Structure to recognize backends for Unix as the same type
+#[doc(hidden)]
 pub struct UnixBackend {
+    /// Backend
     backend: Box<dyn Backend>
 }
 

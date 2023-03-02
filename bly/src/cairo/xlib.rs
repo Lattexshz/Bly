@@ -41,6 +41,7 @@ pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     }
 }
 
+#[doc(hidden)]
 pub(crate) struct XLibBackend {
     handle: c_ulong,
     display: *mut Display,
