@@ -1,0 +1,19 @@
+[book]
+authors = ["Lattexshz"]
+language = "en"
+multilingual = false
+src = "src"
+title = "The Bly"
+
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+curly-quotes = true
+mathjax-support = false
+copy-fonts = true
+no-section-label = false
+git-repository-url = "https://github.com/lattexshz/Bly"
+git-repository-icon = "fa-github"
+edit-url-template = "https://github.com/lattexshz/Bly"
+site-url = "/Bly/"
