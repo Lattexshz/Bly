@@ -1,5 +1,5 @@
-use crate::{Backend, Point2};
 use crate::cairo::{util, CairoBackend};
+use crate::{Backend, Point2};
 use cairo_sys::{
     cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve,
     cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width,
@@ -14,7 +14,7 @@ use x11::xlib::{Display, XDefaultVisual, XFlush, XGetGeometry, XOpenDisplay};
 pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
     unsafe {
         let display = XOpenDisplay(std::ptr::null_mut());
-        info!("Display acquired. {:?}",display);
+        info!("Display acquired. {:?}", display);
         let (width, height) = util::get_xlib_window_size(display, window);
 
         let surface = cairo_xlib_surface_create(
@@ -24,7 +24,7 @@ pub(crate) fn create_backend(window: c_ulong) -> CairoBackend {
             width as c_int,
             height as c_int,
         );
-        
+
         info!("A Cairo surface has been created.");
 
         let cairo = cairo_create(surface);
@@ -55,7 +55,6 @@ pub(crate) struct XLibBackend {
 }
 
 impl Backend for XLibBackend {
-
     #[inline]
     unsafe fn begin_draw(&mut self) {
         let (width, height) = get_xlib_window_size(self.display, self.handle);
@@ -89,15 +88,7 @@ impl Backend for XLibBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(
-        &mut self,
-        point: Point2<f32>,
-        radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    ) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
         cairo_set_source_rgba(
             self.cairo,
             r as c_double,

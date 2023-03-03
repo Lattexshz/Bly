@@ -11,58 +11,46 @@ use raw_window_handle::{HasRawWindowHandle, RawWindowHandle};
 
 #[cfg(target_os = "linux")]
 pub(crate) mod cairo;
-#[cfg(target_os = "linux")]
-pub(crate) mod wayland;
 #[cfg(target_os = "windows")]
 mod dx2d;
-#[cfg(target_arch = "wasm32")]
-mod web;
 #[cfg(target_os = "linux")]
 mod unix;
+#[cfg(target_os = "linux")]
+pub(crate) mod wayland;
+#[cfg(target_arch = "wasm32")]
+mod web;
 
 /// Trait for common back-end processing
 pub trait Backend {
     // Initialize
     /// Processing to start drawing (initialization, etc.)
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn begin_draw(&mut self);
+
     /// Processing to finish drawing
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn flush(&mut self);
     /// Get display size
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32);
+
     /// Fills the window background with a specific color
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
 
     // Primitives
     /// Draws a ellipse
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
-    unsafe fn ellipse(
-        &mut self,
-        point: Point2<f32>,
-        radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    );
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32);
 
     /// Draws a rectangle
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -74,9 +62,8 @@ pub trait Backend {
     );
 
     /// Draws a rounded rectangle
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -89,9 +76,8 @@ pub trait Backend {
     );
 
     /// Draws a line
-    /// # Safety 
+    /// # Safety
     /// Call the method from Painter
-    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,
@@ -207,7 +193,7 @@ impl Painter {
             );
         }
     }
-    
+
     #[inline]
     pub fn rounded_rectangle(
         &mut self,
@@ -232,13 +218,7 @@ impl Painter {
 
     /// Draws a line
     #[inline]
-    pub fn line(
-        &mut self,
-        point1: Point2<f32>,
-        point2: Point2<f32>,
-        stroke: f32,
-        color: Color,
-    ) {
+    pub fn line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, color: Color) {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend.line(
@@ -316,25 +296,25 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
     }
 
     #[cfg(feature = "experimental")]
-    warn!("You are using the experimental version of Bly");
+    info!("You are using the experimental version of Bly");
 
     let backend = match handle.raw_window_handle() {
         RawWindowHandle::UiKit(_) => {
             info!("Platform: UiKit");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         #[cfg(target_os = "macos")]
         RawWindowHandle::AppKit(handle) => {
             info!("Platform: AppKit");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         RawWindowHandle::Orbital(_) => {
             info!("Platform: Orbital");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         #[cfg(target_os = "linux")]
         #[cfg(feature = "xlib")]
         RawWindowHandle::Xlib(handle) => {
@@ -346,24 +326,24 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::Xcb(_) => {
             info!("Platform: Xcb");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         #[cfg(target_os = "linux")]
         #[cfg(feature = "wayland")]
         RawWindowHandle::Wayland(handle) => {
             info!("Platform: Wayland Drawing backend is EGL");
             unix::create_wayland_backend(handle.surface)
-        },
+        }
         RawWindowHandle::Drm(_) => {
             info!("Platform: Drm");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         RawWindowHandle::Gbm(_) => {
             info!("Platform: Gbm");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         #[cfg(target_os = "windows")]
         RawWindowHandle::Win32(handle) => {
             info!("Platform: Win32 Drawing backend is Dx2D");
@@ -372,8 +352,8 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::WinRt(_) => {
             info!("Platform: WinRt");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         #[cfg(target_arch = "wasm32")]
         RawWindowHandle::Web(handle) => {
             info!("Platform: Web Drawing backend is web-sys");
@@ -382,17 +362,17 @@ pub fn create_canvas(handle: &impl HasRawWindowHandle) -> Result<Canvas, ()> {
         RawWindowHandle::AndroidNdk(_) => {
             info!("Platform: AndroidNDK");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         RawWindowHandle::Haiku(_) => {
             info!("Platform: Haiku");
             error!("This platform is unsupported");
-            return Err(())
-        },
+            return Err(());
+        }
         _ => {
             error!("Unknown platform");
-            return Err(())
-        },
+            return Err(());
+        }
     };
     info!("Successfully acquired backend");
 

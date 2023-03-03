@@ -16,7 +16,6 @@ pub struct CairoBackend {
 }
 
 impl Backend for CairoBackend {
-
     #[inline]
     unsafe fn begin_draw(&mut self) {
         self.backend.begin_draw();
@@ -38,15 +37,7 @@ impl Backend for CairoBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(
-        &mut self,
-        point: Point2<f32>,
-        radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    ) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
         self.backend.ellipse(point, radius, r, g, b, a);
     }
 

@@ -33,7 +33,6 @@ pub fn create_backend(id: u32) -> WebBackend {
         .style()
         .set_css_text(&format!("width: {}px; height: {}px;", width, height));
 
-
     body.append_child(&canvas).unwrap();
     WebBackend {
         canvas,
@@ -99,15 +98,7 @@ impl Backend for WebBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(
-        &mut self,
-        point: Point2<f32>,
-        radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    ) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
         todo!()
     }
 

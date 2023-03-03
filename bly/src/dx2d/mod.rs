@@ -26,7 +26,6 @@ pub struct Direct2DBackend {
 }
 
 impl Backend for Direct2DBackend {
-
     #[inline]
     unsafe fn begin_draw(&mut self) {
         self.update_target();
@@ -54,15 +53,7 @@ impl Backend for Direct2DBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(
-        &mut self,
-        point: Point2<f32>,
-        radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
-    ) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
         let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
@@ -241,7 +232,6 @@ fn create_target(hwnd: HWND, factory: &ID2D1Factory1) -> (ID2D1HwndRenderTarget,
 impl Direct2DBackend {
     /// Create a new backend
     fn new(hwnd: HWND) -> Result<Self> {
-        info!("HWND: {}",hwnd);
         let factory = create_factory()?;
         let (target, width, height) = create_target(hwnd, &factory);
         Ok(Self {
