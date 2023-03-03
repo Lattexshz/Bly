@@ -16,22 +16,28 @@ pub struct CairoBackend {
 }
 
 impl Backend for CairoBackend {
+
+    #[inline]
     unsafe fn begin_draw(&mut self) {
         self.backend.begin_draw();
     }
 
+    #[inline]
     unsafe fn flush(&mut self) {
         self.backend.flush();
     }
 
+    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
         self.backend.get_display_size()
     }
 
+    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         self.backend.clear(r, g, b, a);
     }
 
+    #[inline]
     unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
@@ -44,6 +50,7 @@ impl Backend for CairoBackend {
         self.backend.ellipse(point, radius, r, g, b, a);
     }
 
+    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -56,6 +63,7 @@ impl Backend for CairoBackend {
         self.backend.rectangle(point1, point2, r, g, b, a);
     }
 
+    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -70,6 +78,7 @@ impl Backend for CairoBackend {
             .rounded_rectangle(point1, point2, radius, r, g, b, a);
     }
 
+    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,

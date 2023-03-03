@@ -65,22 +65,26 @@ pub struct WebBackend {
 }
 
 impl Backend for WebBackend {
+    #[inline]
     unsafe fn begin_draw(&mut self) {
         let (width, height) = self.get_window_size();
         self.scale(width, height);
         self.context.begin_path();
     }
 
+    #[inline]
     unsafe fn flush(&mut self) {
         self.context.fill();
     }
 
+    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
         let (width, height) = self.get_window_size();
         self.scale(width, height);
         (width as u32, height as u32)
     }
 
+    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         self.context
             .set_fill_style(&wasm_bindgen::JsValue::from_str(&format!(
@@ -94,6 +98,7 @@ impl Backend for WebBackend {
             .fill_rect(0.0, 0.0, self.width, self.height + 300.0);
     }
 
+    #[inline]
     unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
@@ -106,6 +111,7 @@ impl Backend for WebBackend {
         todo!()
     }
 
+    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -131,6 +137,7 @@ impl Backend for WebBackend {
         );
     }
 
+    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -144,6 +151,7 @@ impl Backend for WebBackend {
         todo!()
     }
 
+    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,

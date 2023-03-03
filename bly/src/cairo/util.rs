@@ -1,6 +1,7 @@
 use std::ffi::c_ulong;
 use x11::xlib::{Display, XGetGeometry};
 
+#[inline]
 pub(crate) unsafe fn get_xlib_window_size(
     display: *mut Display,
     window: c_ulong,

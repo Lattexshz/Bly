@@ -79,6 +79,7 @@ pub struct WaylandBackend {
 }
 
 impl Backend for WaylandBackend {
+    #[inline]
     unsafe fn begin_draw(&mut self) {
         unsafe {
             wayland_sys::ffi_dispatch!(WAYLAND_CLIENT_HANDLE,wl_display_dispatch_pending,self.wl_display);
@@ -87,18 +88,22 @@ impl Backend for WaylandBackend {
         }
     }
 
+    #[inline]
     unsafe fn flush(&mut self) {
         self.egl.swap_buffers(self.display,self.surface);
     }
 
+    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
         todo!()
     }
 
+    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
 
     }
 
+    #[inline]
     unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
@@ -111,6 +116,7 @@ impl Backend for WaylandBackend {
         todo!()
     }
 
+    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -123,6 +129,7 @@ impl Backend for WaylandBackend {
         //todo!()
     }
 
+    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -136,6 +143,7 @@ impl Backend for WaylandBackend {
         todo!()
     }
 
+    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,

@@ -26,17 +26,21 @@ pub struct Direct2DBackend {
 }
 
 impl Backend for Direct2DBackend {
+
+    #[inline]
     unsafe fn begin_draw(&mut self) {
         self.update_target();
         self.target.BeginDraw();
     }
 
+    #[inline]
     unsafe fn flush(&mut self) {
         self.target
             .EndDraw(std::ptr::null_mut(), std::ptr::null_mut())
             .unwrap();
     }
 
+    #[inline]
     unsafe fn get_display_size(&mut self) -> (u32, u32) {
         unsafe {
             let size = self.target.GetSize();
@@ -44,10 +48,12 @@ impl Backend for Direct2DBackend {
         }
     }
 
+    #[inline]
     unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
         self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
+    #[inline]
     unsafe fn ellipse(
         &mut self,
         point: Point2<f32>,
@@ -82,6 +88,7 @@ impl Backend for Direct2DBackend {
         );
     }
 
+    #[inline]
     unsafe fn rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -113,6 +120,7 @@ impl Backend for Direct2DBackend {
         self.target.FillRectangle(&rect, brush);
     }
 
+    #[inline]
     unsafe fn rounded_rectangle(
         &mut self,
         point1: Point2<f32>,
@@ -151,6 +159,7 @@ impl Backend for Direct2DBackend {
         self.target.FillRoundedRectangle(&rounded_rect, brush);
     }
 
+    #[inline]
     unsafe fn line(
         &mut self,
         point1: Point2<f32>,
