@@ -58,10 +58,6 @@ pub fn create_wayland_backend(wl_surface: *mut c_void) -> Result<WaylandBackend,
         info!("Using {}",str_);
     }
 
-    egl.swap_buffers(display,surface);
-
-
-
     Ok(WaylandBackend {
         egl,
         surface,
