@@ -53,7 +53,7 @@ impl Backend for Direct2DBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: ColorType) {
         let color = D2D1_COLOR_F { r, g, b, a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
@@ -84,15 +84,12 @@ impl Backend for Direct2DBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
-        let color = D2D1_COLOR_F { r, g, b, a };
+        let color = D2D1_COLOR_F { r, g, b, color: a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
-            opacity: a,
+            opacity: color,
             transform: Matrix3x2::identity(),
         };
 
@@ -117,15 +114,12 @@ impl Backend for Direct2DBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
-        let color = D2D1_COLOR_F { r, g, b, a };
+        let color = D2D1_COLOR_F { r, g, b, color: a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
-            opacity: a,
+            opacity: color,
             transform: Matrix3x2::identity(),
         };
 
@@ -156,15 +150,12 @@ impl Backend for Direct2DBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
-        let color = D2D1_COLOR_F { r, g, b, a };
+        let color = D2D1_COLOR_F { r, g, b, color: a };
 
         let properties = D2D1_BRUSH_PROPERTIES {
-            opacity: a,
+            opacity: color,
             transform: Matrix3x2::identity(),
         };
 

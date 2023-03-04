@@ -88,7 +88,7 @@ impl Backend for XLibBackend {
     }
 
     #[inline]
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: ColorType) {
         cairo_set_source_rgba(
             self.cairo,
             r as c_double,
@@ -114,17 +114,14 @@ impl Backend for XLibBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         cairo_set_source_rgba(
             self.cairo,
             r as c_double,
             g as c_double,
             b as c_double,
-            a as c_double,
+            color as c_double,
         );
         cairo_rectangle(
             self.cairo,
@@ -142,17 +139,14 @@ impl Backend for XLibBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         cairo_set_source_rgba(
             self.cairo,
             r as c_double,
             g as c_double,
             b as c_double,
-            a as c_double,
+            color as c_double,
         );
 
         let degrees: f32 = (PI / 180.0) as f32;
@@ -200,10 +194,7 @@ impl Backend for XLibBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         cairo_set_line_width(self.cairo, stroke as c_double);
 
@@ -212,7 +203,7 @@ impl Backend for XLibBackend {
             r as c_double,
             g as c_double,
             b as c_double,
-            a as c_double,
+            color as c_double,
         );
         cairo_move_to(self.cairo, point1.0 as c_double, point1.1 as c_double);
         cairo_line_to(self.cairo, point2.0 as c_double, point2.1 as c_double);

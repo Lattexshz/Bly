@@ -46,7 +46,7 @@ pub trait Backend {
     /// Draws a ellipse
     /// # Safety
     /// Call the method from Painter
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32);
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: ColorType);
 
     /// Draws a rectangle
     /// # Safety
@@ -55,10 +55,7 @@ pub trait Backend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     );
 
     /// Draws a rounded rectangle
@@ -69,10 +66,7 @@ pub trait Backend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     );
 
     /// Draws a line
@@ -83,10 +77,7 @@ pub trait Backend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     );
 }
 
@@ -170,10 +161,7 @@ impl Painter {
             self.backend.ellipse(
                 pos,
                 radius,
-                vec.0 as f32,
-                vec.1 as f32,
-                vec.2 as f32,
-                vec.3 as f32,
+                ,
             );
         }
     }
@@ -186,9 +174,6 @@ impl Painter {
             self.backend.rectangle(
                 pos,
                 size,
-                vec.0 as f32,
-                vec.1 as f32,
-                vec.2 as f32,
                 vec.3 as f32,
             );
         }
@@ -208,9 +193,6 @@ impl Painter {
                 pos,
                 size,
                 radius,
-                vec.0 as f32,
-                vec.1 as f32,
-                vec.2 as f32,
                 vec.3 as f32,
             );
         }
@@ -225,9 +207,6 @@ impl Painter {
                 point1,
                 point2,
                 stroke,
-                vec.0 as f32,
-                vec.1 as f32,
-                vec.2 as f32,
                 vec.3 as f32,
             );
         }

@@ -119,7 +119,7 @@ impl Backend for WaylandBackend {
     unsafe fn clear(&mut self, color: ColorType) {}
 
     #[inline]
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: ColorType) {
         todo!()
     }
 
@@ -128,10 +128,7 @@ impl Backend for WaylandBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         //todo!()
     }
@@ -142,10 +139,7 @@ impl Backend for WaylandBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         todo!()
     }
@@ -156,10 +150,7 @@ impl Backend for WaylandBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        r: f32,
-        g: f32,
-        b: f32,
-        a: f32,
+        color: ColorType,
     ) {
         todo!()
     }
