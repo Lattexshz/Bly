@@ -1,6 +1,6 @@
 //! dx2d
 
-use crate::Backend;
+use crate::{Backend, ColorType};
 use crate::Point2;
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
@@ -48,8 +48,8 @@ impl Backend for Direct2DBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
+    unsafe fn clear(&mut self, color: ColorType) {
+        self.target.Clear(&D2D1_COLOR_F { r, g, b, color: a });
     }
 
     #[inline]

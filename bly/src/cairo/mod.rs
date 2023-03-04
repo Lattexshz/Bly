@@ -1,6 +1,6 @@
 //! Cairo backend for Bly
 
-use crate::{Backend, Point2};
+use crate::{Backend, ColorType, Point2};
 use std::ffi::c_ulong;
 
 mod util;
@@ -32,8 +32,8 @@ impl Backend for CairoBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
-        self.backend.clear(r, g, b, a);
+    unsafe fn clear(&mut self, color: ColorType) {
+        self.backend.clear(color);
     }
 
     #[inline]

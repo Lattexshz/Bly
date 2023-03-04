@@ -1,6 +1,6 @@
 //! Drawing backend for the Web
 
-use crate::{Backend, Point2};
+use crate::{Backend, ColorType, Point2};
 
 #[doc(hidden)]
 pub fn create_backend(id: u32) -> WebBackend {
@@ -84,14 +84,14 @@ impl Backend for WebBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn clear(&mut self, color: ColorType) {
         self.context
             .set_fill_style(&wasm_bindgen::JsValue::from_str(&format!(
                 "rgba({},{},{},{})",
                 (r * 255.0) as u32,
                 (g * 255.0) as u32,
                 (b * 255.0) as u32,
-                (a * 255.0) as u32
+                (color * 255.0) as u32
             )));
         self.context
             .fill_rect(0.0, 0.0, self.width, self.height + 300.0);

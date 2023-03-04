@@ -40,7 +40,7 @@ pub trait Backend {
     /// Fills the window background with a specific color
     /// # Safety
     /// Call the method from Painter
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
+    unsafe fn clear(&mut self, color: ColorType);
 
     // Primitives
     /// Draws a ellipse
@@ -158,7 +158,7 @@ impl Painter {
         unsafe {
             let vec: Vec4 = color.into();
             self.backend
-                .clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
+                .clear(vec.3 as f32);
         }
     }
 
@@ -258,7 +258,7 @@ pub struct Vec4(pub f64, pub f64, pub f64, pub f64);
 /// Enumeration of colors defined by default.
 /// Used to specify fill color, etc.
 #[derive(Debug, Copy, Clone, PartialEq)]
-pub enum Color {
+pub enum Color<'a> {
     White,
     WhiteGray,
     Gray,
@@ -267,20 +267,44 @@ pub enum Color {
     Green,
     Blue,
     Rgba(f32, f32, f32, f32),
+
+    Gradient(&'a [Color<'a>])
+}
+
+#[derive(Debug,Clone,Copy)]
+pub(crate) enum ColorType<'a> {
+    Color(Color<'a>),
+    Gradient(&'a [Color<'a>])
+}
+
+
+#[macro_export]
+macro_rules! gradient {
+    ( $( $x:expr ),* ) => {
+        {
+            let mut temp_vec:Vec<crate::Color> = Vec::new();
+            $(
+                temp_vec.push($x);
+            )*
+            temp_vec
+        }
+    };
 }
 
 // Converts a Color enumerator to a vector.
-impl Into<Vec4> for Color {
-    fn into(self) -> Vec4 {
-        match self {
-            Color::White => Vec4(255.0, 255.0, 255.0, 1.0),
-            Color::WhiteGray => Vec4(0.9, 0.9, 0.9, 1.0),
-            Color::Gray => Vec4(0.9, 0.9, 0.9, 1.0),
-            Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
-            Color::Red => Vec4(1.0, 0.0, 0.0, 1.0),
-            Color::Green => Vec4(0.0, 1.0, 0.0, 1.0),
-            Color::Blue => Vec4(0.0, 0.0, 1.0, 1.0),
-            Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
+impl Into<ColorType<'_>> for Color<'_> {
+    fn into(self) -> ColorType<'static> {
+        if self != Color::Gradient {
+            return ColorType::Color(self);
+        }else {
+            match self {
+                Color::Gradient(slice) => {
+                    return ColorType::Gradient(slice);
+                }
+                _ => {
+                    panic!();
+                }
+            }
         }
     }
 }

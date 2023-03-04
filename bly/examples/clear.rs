@@ -5,6 +5,8 @@ use winit::{
     event_loop::EventLoop,
     window::WindowBuilder,
 };
+use bly::gradient;
+use bly::Color;
 
 fn main() {
     let event_loop = EventLoop::new();

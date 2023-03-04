@@ -1,5 +1,5 @@
 use crate::cairo::{util, CairoBackend};
-use crate::{Backend, Point2};
+use crate::{Backend, ColorType, Point2};
 use cairo_sys::{
     cairo_arc, cairo_close_path, cairo_create, cairo_destroy, cairo_fill, cairo_fill_preserve,
     cairo_line_to, cairo_move_to, cairo_new_sub_path, cairo_rectangle, cairo_set_line_width,
@@ -73,7 +73,7 @@ impl Backend for XLibBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+    unsafe fn clear(&mut self, color: ColorType) {
         let (width, height) = get_xlib_window_size(self.display, self.handle);
 
         cairo_set_source_rgb(self.cairo, r as c_double, g as c_double, b as c_double);

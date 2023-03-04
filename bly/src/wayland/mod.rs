@@ -1,4 +1,4 @@
-use crate::{Backend, Point2};
+use crate::{Backend, ColorType, Point2};
 use khronos_egl::Context;
 use std::ffi::c_void;
 use wayland_sys::client::*;
@@ -116,7 +116,7 @@ impl Backend for WaylandBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {}
+    unsafe fn clear(&mut self, color: ColorType) {}
 
     #[inline]
     unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
