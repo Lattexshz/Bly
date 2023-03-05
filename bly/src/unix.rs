@@ -1,4 +1,4 @@
-use crate::{Backend, ColorType, Point2};
+use crate::{Backend, Point2};
 use std::ffi::{c_ulong, c_void};
 
 #[doc(hidden)]
@@ -38,13 +38,13 @@ impl Backend for UnixBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, color: ColorType) {
-        self.backend.clear(color);
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.clear(r, g, b, a);
     }
 
     #[inline]
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: ColorType) {
-        self.backend.ellipse(point, radius, );
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+        self.backend.ellipse(point, radius, r, g, b, a);
     }
 
     #[inline]
@@ -52,9 +52,12 @@ impl Backend for UnixBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        color: ColorType,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
-        self.backend.rectangle(point1, point2, color);
+        self.backend.rectangle(point1, point2, r, g, b, a);
     }
 
     #[inline]
@@ -63,10 +66,13 @@ impl Backend for UnixBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        color: ColorType,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
         self.backend
-            .rounded_rectangle(point1, point2, radius, color);
+            .rounded_rectangle(point1, point2, radius, r, g, b, a);
     }
 
     #[inline]
@@ -75,8 +81,11 @@ impl Backend for UnixBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        color: ColorType,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
-        self.backend.line(point1, point2, stroke, color);
+        self.backend.line(point1, point2, stroke, r, g, b, a);
     }
 }

@@ -1,6 +1,6 @@
 //! dx2d
 
-use crate::{Backend, Color, GradientType, Point4};
+use crate::Backend;
 use crate::Point2;
 use windows::{
     core::*, Foundation::Numerics::*, Win32::Foundation::*, Win32::Graphics::Direct2D::Common::*,
@@ -48,87 +48,35 @@ impl Backend for Direct2DBackend {
     }
 
     #[inline]
-    unsafe fn clear(&mut self, color: Color) {
-        let size = &self.target.GetSize();
-        match color {
-            Color::Color(c) => {
-                let point:Point4<f32> = c.into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-                self.target.Clear(&color);
-            }
-            Color::Gradient(c,gradient,position) => {
-                let point:Point4<f32> = c[0].into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-                self.target.Clear(&color);
-            }
-        }
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32) {
+        self.target.Clear(&D2D1_COLOR_F { r, g, b, a });
     }
 
     #[inline]
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: Color) {
-        match color {
-            Color::Color(c) => {
-                let point:Point4<f32> = c.into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32) {
+        let color = D2D1_COLOR_F { r, g, b, a };
 
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
 
-                let brush = &self
-                    .target
-                    .CreateSolidColorBrush(&color, &properties)
-                    .unwrap();
+        let brush = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
-                self.target.FillEllipse(
-                    &mut D2D1_ELLIPSE {
-                        point: D2D_POINT_2F {
-                            x: point.0 + radius,
-                            y: point.1 + radius,
-                        },
-                        radiusX: radius,
-                        radiusY: radius,
-                    },
-                    brush,
-                );
-            }
-            Color::Gradient(c,gradient,position) => {
-                let mut vec = vec![];
-                let mut pos = 0.0;
-                for i in c {
-                    pos += 1.0;
-                    let point:Point4<f32> = (*i).into();
-                    let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-
-                    vec.push(D2D1_GRADIENT_STOP { position:pos, color });
-                }
-
-                let collection = self.target.CreateGradientStopCollection(vec.as_slice(), Default::default(), Default::default()).unwrap();
-
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
-
-                match gradient {
-                    GradientType::Linear(from, to) => {
-                        let brush = self.target.CreateLinearGradientBrush(&D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES { startPoint: D2D_POINT_2F { x: from.0, y: from.1 }, endPoint: D2D_POINT_2F { x: to.0, y: to.1 } }, &properties, collection).unwrap();
-                        self.target.FillEllipse(
-                            &mut D2D1_ELLIPSE {
-                                point: D2D_POINT_2F {
-                                    x: point.0 + radius,
-                                    y: point.1 + radius,
-                                },
-                                radiusX: radius,
-                                radiusY: radius,
-                            },
-                            brush,
-                        );
-                    }
-                }
-            }
-        }
+        self.target.FillEllipse(
+            &mut D2D1_ELLIPSE {
+                point: D2D_POINT_2F {
+                    x: point.0 + radius,
+                    y: point.1 + radius,
+                },
+                radiusX: radius,
+                radiusY: radius,
+            },
+            brush,
+        );
     }
 
     #[inline]
@@ -136,63 +84,31 @@ impl Backend for Direct2DBackend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
-        match color {
-            Color::Color(c) => {
-                let point:Point4<f32> = c.into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
+        let color = D2D1_COLOR_F { r, g, b, a };
 
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
 
-                let brush = &self
-                    .target
-                    .CreateSolidColorBrush(&color, &properties)
-                    .unwrap();
+        let brush = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
-                let rect = D2D_RECT_F {
-                    left: point1.0,
-                    right: point1.0 + point2.0,
-                    top: point1.1,
-                    bottom: point1.1 + point2.1,
-                };
+        let rect = D2D_RECT_F {
+            left: point1.0,
+            right: point1.0 + point2.0,
+            top: point1.1,
+            bottom: point1.1 + point2.1,
+        };
 
-                self.target.FillRectangle(&rect, brush);
-            }
-            Color::Gradient(c,gradient,position) => {
-                let mut vec = vec![];
-                for i in c {
-                    let point:Point4<f32> = (*i).into();
-                    let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-
-                    vec.push(D2D1_GRADIENT_STOP { position, color });
-                }
-
-                let collection = self.target.CreateGradientStopCollection(vec.as_slice(), Default::default(), Default::default()).unwrap();
-
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
-
-                let rect = D2D_RECT_F {
-                    left: point1.0,
-                    right: point1.0 + point2.0,
-                    top: point1.1,
-                    bottom: point1.1 + point2.1,
-                };
-
-                match gradient {
-                    GradientType::Linear(from, to) => {
-                        let brush = self.target.CreateLinearGradientBrush(&D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES { startPoint: D2D_POINT_2F { x: from.0, y: from.1 }, endPoint: D2D_POINT_2F { x: to.0, y: to.1 } }, &properties, collection).unwrap();
-                        self.target.FillRectangle(&rect, brush);
-                    }
-                }
-            }
-        }
+        self.target.FillRectangle(&rect, brush);
     }
 
     #[inline]
@@ -201,75 +117,37 @@ impl Backend for Direct2DBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
-        match color {
-            Color::Color(c) => {
-                let point:Point4<f32> = c.into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
+        let color = D2D1_COLOR_F { r, g, b, a };
 
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
 
-                let brush = &self
-                    .target
-                    .CreateSolidColorBrush(&color, &properties)
-                    .unwrap();
+        let brush = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
-                let rect = D2D_RECT_F {
-                    left: point1.0,
-                    right: point1.0 + point2.0,
-                    top: point1.1,
-                    bottom: point1.1 + point2.1,
-                };
+        let rect = D2D_RECT_F {
+            left: point1.0,
+            right: point1.0 + point2.0,
+            top: point1.1,
+            bottom: point1.1 + point2.1,
+        };
 
-                let rounded_rect = D2D1_ROUNDED_RECT {
-                    rect,
-                    radiusX: radius,
-                    radiusY: radius,
-                };
+        let rounded_rect = D2D1_ROUNDED_RECT {
+            rect,
+            radiusX: radius,
+            radiusY: radius,
+        };
 
-                self.target.FillRoundedRectangle(&rounded_rect, brush);
-            }
-            Color::Gradient(c,gradient,position) => {
-                let mut vec = vec![];
-                for i in c {
-                    let point:Point4<f32> = (*i).into();
-                    let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-
-                    vec.push(D2D1_GRADIENT_STOP { position, color });
-                }
-
-                let collection = self.target.CreateGradientStopCollection(vec.as_slice(), Default::default(), Default::default()).unwrap();
-
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
-
-                let rect = D2D_RECT_F {
-                    left: point1.0,
-                    right: point1.0 + point2.0,
-                    top: point1.1,
-                    bottom: point1.1 + point2.1,
-                };
-
-                let rounded_rect = D2D1_ROUNDED_RECT {
-                    rect,
-                    radiusX: radius,
-                    radiusY: radius,
-                };
-
-                match gradient {
-                    GradientType::Linear(from, to) => {
-                        let brush = self.target.CreateLinearGradientBrush(&D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES { startPoint: D2D_POINT_2F { x: from.0, y: from.1 }, endPoint: D2D_POINT_2F { x: to.0, y: to.1 } }, &properties, collection).unwrap();
-                        self.target.FillRoundedRectangle(&rounded_rect, brush);
-                    }
-                }
-            }
-        }
+        self.target.FillRoundedRectangle(&rounded_rect, brush);
     }
 
     #[inline]
@@ -278,89 +156,44 @@ impl Backend for Direct2DBackend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     ) {
-        match color {
-            Color::Color(c) => {
-                let point:Point4<f32> = c.into();
-                let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
+        let color = D2D1_COLOR_F { r, g, b, a };
 
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
+        let properties = D2D1_BRUSH_PROPERTIES {
+            opacity: a,
+            transform: Matrix3x2::identity(),
+        };
 
-                let brush = &self
-                    .target
-                    .CreateSolidColorBrush(&color, &properties)
-                    .unwrap();
+        let brush1 = &self
+            .target
+            .CreateSolidColorBrush(&color, &properties)
+            .unwrap();
 
-                let props = D2D1_STROKE_STYLE_PROPERTIES {
-                    startCap: D2D1_CAP_STYLE_ROUND,
-                    endCap: D2D1_CAP_STYLE_TRIANGLE,
-                    ..Default::default()
-                };
+        let props = D2D1_STROKE_STYLE_PROPERTIES {
+            startCap: D2D1_CAP_STYLE_ROUND,
+            endCap: D2D1_CAP_STYLE_TRIANGLE,
+            ..Default::default()
+        };
 
-                let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
+        let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
 
-                self.target.DrawLine(
-                    D2D_POINT_2F {
-                        x: point1.0,
-                        y: point1.1,
-                    },
-                    D2D_POINT_2F {
-                        x: point2.0,
-                        y: point2.1,
-                    },
-                    brush,
-                    stroke,
-                    style,
-                );
-            }
-            Color::Gradient(c,gradient,position) => {
-                let mut vec = vec![];
-                for i in c {
-                    let point:Point4<f32> = (*i).into();
-                    let color = D2D1_COLOR_F { r:point.0, g:point.1, b:point.2, a:point.3 };
-
-                    vec.push(D2D1_GRADIENT_STOP { position, color });
-                }
-
-                let collection = self.target.CreateGradientStopCollection(vec.as_slice(), Default::default(), Default::default()).unwrap();
-
-                let properties = D2D1_BRUSH_PROPERTIES {
-                    opacity: 1.0,
-                    transform: Matrix3x2::identity(),
-                };
-
-                let props = D2D1_STROKE_STYLE_PROPERTIES {
-                    startCap: D2D1_CAP_STYLE_ROUND,
-                    endCap: D2D1_CAP_STYLE_TRIANGLE,
-                    ..Default::default()
-                };
-
-                let style = unsafe { self.factory.CreateStrokeStyle(&props, &[]).unwrap() };
-
-                match gradient {
-                    GradientType::Linear(from, to) => {
-                        let brush = self.target.CreateLinearGradientBrush(&D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES { startPoint: D2D_POINT_2F { x: from.0, y: from.1 }, endPoint: D2D_POINT_2F { x: to.0, y: to.1 } }, &properties, collection).unwrap();
-                        self.target.DrawLine(
-                            D2D_POINT_2F {
-                                x: point1.0,
-                                y: point1.1,
-                            },
-                            D2D_POINT_2F {
-                                x: point2.0,
-                                y: point2.1,
-                            },
-                            brush,
-                            stroke,
-                            style,
-                        );
-                    }
-                }
-            }
-        }
+        self.target.DrawLine(
+            D2D_POINT_2F {
+                x: point1.0,
+                y: point1.1,
+            },
+            D2D_POINT_2F {
+                x: point2.0,
+                y: point2.1,
+            },
+            brush1,
+            stroke,
+            style,
+        );
     }
 }
 

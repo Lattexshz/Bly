@@ -40,13 +40,13 @@ pub trait Backend {
     /// Fills the window background with a specific color
     /// # Safety
     /// Call the method from Painter
-    unsafe fn clear(&mut self, color: Color);
+    unsafe fn clear(&mut self, r: f32, g: f32, b: f32, a: f32);
 
     // Primitives
     /// Draws a ellipse
     /// # Safety
     /// Call the method from Painter
-    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, color: Color);
+    unsafe fn ellipse(&mut self, point: Point2<f32>, radius: f32, r: f32, g: f32, b: f32, a: f32);
 
     /// Draws a rectangle
     /// # Safety
@@ -55,7 +55,10 @@ pub trait Backend {
         &mut self,
         point1: Point2<f32>,
         point2: Point2<f32>,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     );
 
     /// Draws a rounded rectangle
@@ -66,7 +69,10 @@ pub trait Backend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         radius: f32,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     );
 
     /// Draws a line
@@ -77,12 +83,14 @@ pub trait Backend {
         point1: Point2<f32>,
         point2: Point2<f32>,
         stroke: f32,
-        color: Color,
+        r: f32,
+        g: f32,
+        b: f32,
+        a: f32,
     );
 }
 
 /// Represents two points in two dimensions
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
 pub struct Point2<T>(pub T, pub T);
 impl<T> Point2<T> {
     pub fn new(a: T, b: T) -> Self {
@@ -91,7 +99,6 @@ impl<T> Point2<T> {
 }
 
 /// Represents three points in two dimensions
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
 pub struct Point3<T>(pub T, pub T, pub T);
 impl<T> Point3<T> {
     pub fn new(a: T, b: T, c: T) -> Self {
@@ -100,7 +107,6 @@ impl<T> Point3<T> {
 }
 
 /// Represents four points in two dimensions
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
 pub struct Point4<T>(pub T, pub T, pub T, pub T);
 impl<T> Point4<T> {
     pub fn new(a: T, b: T, c: T, d: T) -> Self {
@@ -150,8 +156,9 @@ impl Painter {
     #[inline]
     pub fn clear(&mut self, color: Color) {
         unsafe {
+            let vec: Vec4 = color.into();
             self.backend
-                .clear(color);
+                .clear(vec.0 as f32, vec.1 as f32, vec.2 as f32, vec.3 as f32);
         }
     }
 
@@ -159,10 +166,14 @@ impl Painter {
     #[inline]
     pub fn ellipse(&mut self, pos: Point2<f32>, radius: f32, color: Color) {
         unsafe {
+            let vec: Vec4 = color.into();
             self.backend.ellipse(
                 pos,
                 radius,
-                color,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
             );
         }
     }
@@ -171,10 +182,14 @@ impl Painter {
     #[inline]
     pub fn rectangle(&mut self, pos: Point2<f32>, size: Point2<f32>, color: Color) {
         unsafe {
+            let vec: Vec4 = color.into();
             self.backend.rectangle(
                 pos,
                 size,
-                color,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
             );
         }
     }
@@ -187,12 +202,16 @@ impl Painter {
         radius: f32,
         color: Color,
     ) {
+        let vec: Vec4 = color.into();
         unsafe {
             self.backend.rounded_rectangle(
                 pos,
                 size,
                 radius,
-                color,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
             );
         }
     }
@@ -201,11 +220,15 @@ impl Painter {
     #[inline]
     pub fn line(&mut self, point1: Point2<f32>, point2: Point2<f32>, stroke: f32, color: Color) {
         unsafe {
+            let vec: Vec4 = color.into();
             self.backend.line(
                 point1,
                 point2,
                 stroke,
-                color,
+                vec.0 as f32,
+                vec.1 as f32,
+                vec.2 as f32,
+                vec.3 as f32,
             );
         }
     }
@@ -234,8 +257,8 @@ pub struct Vec4(pub f64, pub f64, pub f64, pub f64);
 
 /// Enumeration of colors defined by default.
 /// Used to specify fill color, etc.
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
-pub enum ColorEnums {
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum Color {
     White,
     WhiteGray,
     Gray,
@@ -246,45 +269,20 @@ pub enum ColorEnums {
     Rgba(f32, f32, f32, f32),
 }
 
-impl Into<Point4<f32>> for ColorEnums {
-    fn into(self) -> Point4<f32> {
+// Converts a Color enumerator to a vector.
+impl Into<Vec4> for Color {
+    fn into(self) -> Vec4 {
         match self {
-            ColorEnums::White => Point4(255.0, 255.0, 255.0, 1.0),
-            ColorEnums::WhiteGray => Point4(0.9, 0.9, 0.9, 1.0),
-            ColorEnums::Gray => Point4(0.9, 0.9, 0.9, 1.0),
-            ColorEnums::Black => Point4(0.0, 0.0, 0.0, 255.0),
-            ColorEnums::Red => Point4(1.0, 0.0, 0.0, 1.0),
-            ColorEnums::Green => Point4(0.0, 1.0, 0.0, 1.0),
-            ColorEnums::Blue => Point4(0.0, 0.0, 1.0, 1.0),
-            ColorEnums::Rgba(r, g, b, a) => Point4(r,g,b,a),
+            Color::White => Vec4(255.0, 255.0, 255.0, 1.0),
+            Color::WhiteGray => Vec4(0.9, 0.9, 0.9, 1.0),
+            Color::Gray => Vec4(0.9, 0.9, 0.9, 1.0),
+            Color::Black => Vec4(0.0, 0.0, 0.0, 255.0),
+            Color::Red => Vec4(1.0, 0.0, 0.0, 1.0),
+            Color::Green => Vec4(0.0, 1.0, 0.0, 1.0),
+            Color::Blue => Vec4(0.0, 0.0, 1.0, 1.0),
+            Color::Rgba(r, g, b, a) => Vec4(r as f64, g as f64, b as f64, a as f64),
         }
     }
-}
-
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
-pub enum GradientType {
-    /// Linear(from,to)
-    Linear(Point2<f32>,Point2<f32>)
-}
-
-#[derive(Debug,Clone,Copy,PartialEq,PartialOrd)]
-pub enum Color<'a> {
-    Color(ColorEnums),
-    Gradient(&'a [ColorEnums],GradientType,f32)
-}
-
-
-#[macro_export]
-macro_rules! gradient {
-    ( $( $x:expr,$y:expr,$z:expr ),* ) => {
-        {
-            let mut temp_vec:Vec<crate::Color> = Vec::new();
-            $(
-                temp_vec.push($x);
-                crate::Color::Gradient(temp_vec.as_slice(),$y,$z)
-            )*
-        }
-    };
 }
 
 /// Initialize bly  
